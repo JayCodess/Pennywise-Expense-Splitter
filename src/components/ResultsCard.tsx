@@ -1,0 +1,255 @@
+import React, { useState, useEffect } from 'react';
+import { useExpenseStore } from '../hooks/useExpenseStore';
+import { formatMoney } from '../lib/money';
+import { StormDrain } from './StormDrain';
+
+export const ResultsCard: React.FC = () => {
+  const {
+    people,
+    expenses,
+    currency,
+    balances,
+    settlements,
+    totalSpentMinor,
+    clearAll,
+  } = useExpenseStore();
+
+  const [copied, setCopied] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+
+  useEffect(() => {
+    let timer: number;
+    if (copied) {
+      timer = window.setTimeout(() => setCopied(false), 2000);
+    }
+    return () => clearTimeout(timer);
+  }, [copied]);
+
+  const getPersonName = (id: string) => {
+    return people.find((p) => p.id === id)?.name || id;
+  };
+
+  const handleShare = async () => {
+    const lines = [
+      `🎈 Pennywise Tab — Everyone pays in the end.`,
+      `Total spent: ${formatMoney(totalSpentMinor, currency)}`,
+      '',
+      'Settlements:',
+      ...settlements.map((s) => `• ${getPersonName(s.from)} owes ${getPersonName(s.to)} ${formatMoney(s.amountMinor, currency)}`),
+    ];
+    const text = lines.join('\n');
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        setCopied(true);
+      } else {
+        // Fallback for older / restricted environments
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        setCopied(true);
+      }
+    } catch {
+      // If clipboard write is rejected
+      setCopied(false);
+    }
+  };
+
+  const hasData = people.length > 0 && expenses.length > 0;
+  const isAllSquare = hasData && settlements.length === 0;
+
+  return (
+    <section
+      id="results-card"
+      aria-labelledby="results-title"
+      aria-live="polite"
+      className="bg-surface border border-border rounded-card p-4 sm:p-5 shadow-carnival animate-card-in space-y-4"
+    >
+      <div className="flex items-center justify-between border-b border-border pb-3">
+        <h2 id="results-title" className="font-display text-2xl text-text-base tracking-wide flex items-center gap-2">
+          <span>Who Pays Whom</span>
+          {settlements.length > 0 && (
+            <span className="font-sans text-xs bg-accent text-white px-2 py-0.5 rounded-full font-bold">
+              {settlements.length}
+            </span>
+          )}
+        </h2>
+
+        {settlements.length > 0 && (
+          <button
+            type="button"
+            onClick={handleShare}
+            className="min-h-[44px] px-3.5 py-1.5 rounded-xl border border-border bg-background text-xs font-semibold text-text-base hover:border-accent-text hover:text-accent-text transition-colors flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-accent-text"
+          >
+            <span>{copied ? '✓' : '🎈'}</span>
+            <span>{copied ? "Copied… they'll see it." : 'Share the damage'}</span>
+          </button>
+        )}
+      </div>
+
+      {/* Empty State */}
+      {!hasData && (
+        <div className="py-8 px-4 rounded-xl border border-dashed border-border/80 bg-background/50 text-center flex flex-col items-center justify-center gap-2">
+          <StormDrain size={36} />
+          <p className="text-sm text-text-muted">
+            Add people and expenses to see who owes whom.
+          </p>
+        </div>
+      )}
+
+      {/* All Square State */}
+      {isAllSquare && (
+        <div className="py-8 px-4 rounded-xl border border-dashed border-border/80 bg-background/50 text-center flex flex-col items-center justify-center gap-2 animate-card-in">
+          <span className="text-3xl select-none" aria-hidden="true">
+            🎈
+          </span>
+          <p className="text-base font-semibold text-text-base">All settled. For now. 🎈</p>
+          <p className="text-xs text-text-muted">Nobody owes a single coin.</p>
+        </div>
+      )}
+
+      {/* Active Settlements Cards */}
+      {settlements.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">
+            Settlement Payments
+          </h3>
+          <ul className="space-y-2" aria-label="Settlement payments">
+            {settlements.map((s, idx) => {
+              const fromName = getPersonName(s.from);
+              const toName = getPersonName(s.to);
+              const amountFormatted = formatMoney(s.amountMinor, currency);
+
+              return (
+                <li
+                  key={idx}
+                  className="p-3.5 rounded-xl bg-background border border-border/90 flex items-center justify-between gap-3 shadow-sm animate-card-in"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-text-base">
+                      <span className="text-negative-text">{fromName}</span> owes{' '}
+                      <span className="text-positive-text">{toName}</span>
+                    </p>
+                    <p className="text-xs text-text-muted mt-0.5">
+                      Direct payment to settle tab
+                    </p>
+                  </div>
+                  <span className="font-sans font-tabular text-base sm:text-lg font-bold text-negative-text shrink-0">
+                    {amountFormatted}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      {/* Individual Balances */}
+      {hasData && (
+        <div className="pt-2 border-t border-border">
+          <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+            Net Balances
+          </h3>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2" aria-label="Individual balances">
+            {balances.map((b) => {
+              const name = getPersonName(b.personId);
+              const isPositive = b.balanceMinor > 0;
+              const isNegative = b.balanceMinor < 0;
+
+              return (
+                <li
+                  key={b.personId}
+                  className="p-2.5 rounded-xl bg-background border border-border/80 flex items-center justify-between text-xs"
+                >
+                  <span title={name} className="font-medium text-text-base truncate max-w-[120px]">
+                    {name}
+                  </span>
+                  <div className="text-right shrink-0">
+                    <span
+                      className={`font-sans font-tabular font-bold block ${
+                        isPositive
+                          ? 'text-positive-text'
+                          : isNegative
+                          ? 'text-negative-text'
+                          : 'text-text-muted'
+                      }`}
+                    >
+                      {isPositive ? '+' : ''}
+                      {formatMoney(b.balanceMinor, currency)}
+                    </span>
+                    <span className="text-[10px] text-text-muted block">
+                      {isPositive ? 'gets back' : isNegative ? 'owes' : 'settled'}
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      {/* Collapsible How is this calculated? */}
+      {hasData && (
+        <details className="pt-2 border-t border-border group text-xs text-text-muted">
+          <summary className="cursor-pointer font-medium hover:text-text-base transition-colors select-none py-1 flex items-center justify-between focus-visible:ring-2 focus-visible:ring-accent-text rounded">
+            <span>How is this calculated?</span>
+            <span className="text-sm transition-transform group-open:rotate-180">▾</span>
+          </summary>
+          <div className="mt-2 p-3 rounded-xl bg-background border border-border/80 space-y-2 leading-relaxed">
+            <p className="font-mono text-[11px] text-text-base bg-surface px-2 py-1 rounded border border-border">
+              Balance = total paid − own share
+            </p>
+            <p>
+              Each expense is split evenly among its participants. We calculate everyone's net balance, then repeatedly match the largest debtor with the largest creditor to settle all debts in the fewest possible payments.
+            </p>
+          </div>
+        </details>
+      )}
+
+      {/* Banish Everything (Quiet spot at bottom) */}
+      {hasData && (
+        <div className="pt-2 border-t border-border flex justify-end">
+          {showClearConfirm ? (
+            <div className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-background border border-negative-text/40 text-xs animate-card-in">
+              <span className="text-text-base">This will make everything disappear. Sure?</span>
+              <div className="flex gap-1.5 ml-auto">
+                <button
+                  type="button"
+                  onClick={() => setShowClearConfirm(false)}
+                  className="px-2.5 py-1 rounded-lg border border-border bg-surface text-text-muted hover:text-text-base text-xs font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearAll();
+                    setShowClearConfirm(false);
+                  }}
+                  className="px-2.5 py-1 rounded-lg bg-negative text-white hover:bg-accent-hover text-xs font-semibold"
+                >
+                  Yes, banish
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowClearConfirm(true)}
+              className="text-xs text-text-muted hover:text-negative-text transition-colors py-1 px-2 rounded focus-visible:ring-2 focus-visible:ring-accent-text"
+            >
+              Banish everything
+            </button>
+          )}
+        </div>
+      )}
+    </section>
+  );
+};
