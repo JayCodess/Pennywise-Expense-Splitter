@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useExpenseStore } from '../hooks/useExpenseStore';
 import { formatMoney } from '../lib/money';
 import { StormDrain } from './StormDrain';
@@ -17,6 +17,9 @@ export const ResultsCard: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
+  const banishTriggerBtnRef = useRef<HTMLButtonElement>(null);
+  const cancelBanishBtnRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     let timer: number;
     if (copied) {
@@ -24,6 +27,22 @@ export const ResultsCard: React.FC = () => {
     }
     return () => clearTimeout(timer);
   }, [copied]);
+
+  // Handle Escape key to cancel Banish confirmation and focus cancel button when open
+  useEffect(() => {
+    if (showClearConfirm && cancelBanishBtnRef.current) {
+      cancelBanishBtnRef.current.focus();
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showClearConfirm) {
+        setShowClearConfirm(false);
+        banishTriggerBtnRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showClearConfirm]);
 
   const getPersonName = (id: string) => {
     return people.find((p) => p.id === id)?.name || id;
@@ -44,7 +63,6 @@ export const ResultsCard: React.FC = () => {
         await navigator.clipboard.writeText(text);
         setCopied(true);
       } else {
-        // Fallback for older / restricted environments
         const textArea = document.createElement('textarea');
         textArea.value = text;
         textArea.style.position = 'fixed';
@@ -57,7 +75,6 @@ export const ResultsCard: React.FC = () => {
         setCopied(true);
       }
     } catch {
-      // If clipboard write is rejected
       setCopied(false);
     }
   };
@@ -65,28 +82,40 @@ export const ResultsCard: React.FC = () => {
   const hasData = people.length > 0 && expenses.length > 0;
   const isAllSquare = hasData && settlements.length === 0;
 
+  // Short concise summary for screen readers (aria-live="polite")
+  const summaryText = !hasData
+    ? 'Waiting for people and expenses'
+    : isAllSquare
+    ? 'All settled'
+    : `${settlements.length} ${settlements.length === 1 ? 'payment' : 'payments'} to settle up`;
+
   return (
     <section
       id="results-card"
       aria-labelledby="results-title"
-      aria-live="polite"
       className="bg-surface border border-border rounded-card p-4 sm:p-5 shadow-carnival animate-card-in space-y-4"
     >
       <div className="flex items-center justify-between border-b border-border pb-3">
-        <h2 id="results-title" className="font-display text-2xl text-text-base tracking-wide flex items-center gap-2">
-          <span>Who Pays Whom</span>
-          {settlements.length > 0 && (
-            <span className="font-sans text-xs bg-accent text-white px-2 py-0.5 rounded-full font-bold">
-              {settlements.length}
-            </span>
-          )}
-        </h2>
+        <div>
+          <h2 id="results-title" className="font-display text-2xl text-text-base tracking-wide flex items-center gap-2">
+            <span>Who Pays Whom</span>
+            {settlements.length > 0 && (
+              <span className="font-sans text-xs bg-accent text-white px-2 py-0.5 rounded-full font-bold">
+                {settlements.length}
+              </span>
+            )}
+          </h2>
+          {/* Concise aria-live summary so screen readers only hear concise updates */}
+          <p aria-live="polite" className="text-xs text-text-muted mt-0.5">
+            {summaryText}
+          </p>
+        </div>
 
         {settlements.length > 0 && (
           <button
             type="button"
             onClick={handleShare}
-            className="min-h-[44px] px-3.5 py-1.5 rounded-xl border border-border bg-background text-xs font-semibold text-text-base hover:border-accent-text hover:text-accent-text transition-colors flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-accent-text"
+            className="min-h-[44px] px-3.5 py-1.5 rounded-xl border border-border bg-background text-xs font-semibold text-text-base hover:border-accent-text hover:text-accent-text transition-colors flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-accent-text shrink-0"
           >
             <span>{copied ? '✓' : '🎈'}</span>
             <span>{copied ? "Copied… they'll see it." : 'Share the damage'}</span>
@@ -217,13 +246,24 @@ export const ResultsCard: React.FC = () => {
       {hasData && (
         <div className="pt-2 border-t border-border flex justify-end">
           {showClearConfirm ? (
-            <div className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-background border border-negative-text/40 text-xs animate-card-in">
-              <span className="text-text-base">This will make everything disappear. Sure?</span>
+            <div
+              role="alertdialog"
+              aria-labelledby="banish-title"
+              aria-describedby="banish-desc"
+              className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-background border border-negative-text/40 text-xs animate-card-in"
+            >
+              <span id="banish-desc" className="text-text-base font-medium">
+                This will make everything disappear. Sure?
+              </span>
               <div className="flex gap-1.5 ml-auto">
                 <button
+                  ref={cancelBanishBtnRef}
                   type="button"
-                  onClick={() => setShowClearConfirm(false)}
-                  className="px-2.5 py-1 rounded-lg border border-border bg-surface text-text-muted hover:text-text-base text-xs font-medium"
+                  onClick={() => {
+                    setShowClearConfirm(false);
+                    banishTriggerBtnRef.current?.focus();
+                  }}
+                  className="px-2.5 py-1.5 rounded-lg border border-border bg-surface text-text-base hover:border-accent-text text-xs font-medium focus-visible:ring-2 focus-visible:ring-accent-text"
                 >
                   Cancel
                 </button>
@@ -233,7 +273,7 @@ export const ResultsCard: React.FC = () => {
                     clearAll();
                     setShowClearConfirm(false);
                   }}
-                  className="px-2.5 py-1 rounded-lg bg-negative text-white hover:bg-accent-hover text-xs font-semibold"
+                  className="px-2.5 py-1.5 rounded-lg bg-negative text-white hover:bg-accent-hover text-xs font-semibold focus-visible:ring-2 focus-visible:ring-accent-text"
                 >
                   Yes, banish
                 </button>
@@ -241,9 +281,10 @@ export const ResultsCard: React.FC = () => {
             </div>
           ) : (
             <button
+              ref={banishTriggerBtnRef}
               type="button"
               onClick={() => setShowClearConfirm(true)}
-              className="text-xs text-text-muted hover:text-negative-text transition-colors py-1 px-2 rounded focus-visible:ring-2 focus-visible:ring-accent-text"
+              className="text-xs text-text-muted hover:text-negative-text transition-colors py-1.5 px-2.5 rounded focus-visible:ring-2 focus-visible:ring-accent-text min-h-[36px]"
             >
               Banish everything
             </button>

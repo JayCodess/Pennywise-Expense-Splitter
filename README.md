@@ -2,19 +2,45 @@
 
 > *"Everyone pays in the end."*
 
-A creepy-carnival expense splitter web app built with Vite, React, TypeScript, and Tailwind CSS.
+A creepy-carnival expense splitter web app where a group enters who paid for what and instantly sees the fewest payments needed to settle up. Fast, obvious, zero-backend, and fully persistent in client `localStorage`.
+
+---
 
 ## Features
-- **Zero backend & zero accounts**: All state runs and persists securely in client `localStorage`.
-- **Optimal settlement calculation**: Greedy minimum-cash-flow algorithm guarantees minimal number of transactions (at most N-1 transactions for N participants).
-- **Session-only single-level undo**: Deleting an expense triggers a polite undo toast that allows immediate restoration. Undo state is session-only and not persisted across refreshes.
-- **Creepy carnival aesthetic**: Sinister clown mascot, bobbing red balloon, storm drain iconography, and subtle eerie atmospheric effects.
-- **Accessible & Responsive**: WCAG AA contrast compliance across both dark (near-black) and light (faded old paper) themes, full keyboard navigation, visible focus rings, touch targets $\ge 44\text{px}$, and strict respect for `prefers-reduced-motion`.
+- **Optimal Settlement Calculation**:
+  - Implements a greedy minimum-cash-flow algorithm (matching the largest debtor with the largest creditor).
+  - Guarantees at most $N-1$ payments for $N$ people.
+  - Balances always sum to exactly zero.
+  - Deterministic remainder distribution prevents fractional cent rounding errors.
+- **Creepy Carnival Theme & Visuals**:
+  - Dark near-black palette (`#0d0b0c`) with charcoal cards (`#1a1618`), blood-red accents (`#c1121f`), and sickly yellow-green highlights (`#b7c34a`).
+  - Faded old paper light mode option.
+  - Original inline SVG clown mascot with glowing yellow eyes, asymmetrical stare, stitched grin, and ruffled collar.
+  - Floating bobbing red balloon and storm-drain sewer grate iconography.
+- **Session-Only Undo**:
+  - Deleting an expense triggers a polite, floating toast allowing instant single-level restoration.
+  - **Undo Limitation**: Undo state is strictly single-level and session-only; it is not saved to persistent storage and is reset upon browser refresh.
+- **Data Privacy Note**:
+  - *"Your data stays in your browser. Down in the drain, where nobody can find it."*
+  - No database, no user accounts, no tracking cookies, no analytics, and zero external network calls.
+- **Accessibility & Mobile-First**:
+  - WCAG AA contrast compliance across both dark and light modes.
+  - Semantic HTML, visible focus rings, radio/toggle ARIA roles, and concise `aria-live="polite"` updates.
+  - All interactive elements are sized for touch ($\ge 44\text{px}$).
+  - All animations stop cleanly when `prefers-reduced-motion` is active.
+- **Responsive Layout**:
+  - Desktop ($\ge 1024\text{px}$): Two columns with an internally scrolling, sticky results panel.
+  - Mobile (down to 360px): Single-column layout with a floating *"See who pays whom ↓"* pill when results are off-screen.
+- **15 Supported Currencies**:
+  - USD, EUR, GBP, INR, CHF, CAD, AUD, NZD, SEK, NOK, DKK, PLN, CZK, TRY, ZAR.
+  - Handles thousands separators (US `1,234.50` and European `1.234,50`). Switching currency reformats immediately without converting values.
+
+---
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v18+ recommended)
+- Node.js (v18 or higher recommended)
 - npm
 
 ### Installation
@@ -22,17 +48,26 @@ A creepy-carnival expense splitter web app built with Vite, React, TypeScript, a
 npm install
 ```
 
-### Development
+### Running Locally (Development)
 ```bash
 npm run dev
 ```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### Testing
+### Running Tests
+Execute the full Vitest suite (49 unit and integration tests):
 ```bash
 npm test
 ```
 
 ### Production Build
+Build optimized static assets into `dist/`:
 ```bash
 npm run build
+```
+
+### Preview Production Build
+Locally preview the built production app:
+```bash
+npm run preview
 ```

@@ -10,15 +10,15 @@ import { Toast } from './components/Toast';
 import { StormDrain } from './components/StormDrain';
 
 export const AppContent: React.FC = () => {
-  const { settlements, totalSpentMinor } = useExpenseStore();
+  const { settlements } = useExpenseStore();
 
-  // Theme Spec: clown's eyes brighten slightly when the total owed is large (>= $100)
-  const isLargeTotal = totalSpentMinor >= 10000 || settlements.some((s) => s.amountMinor >= 5000);
+  // Currency-neutral mascot glow: clown's eyes brighten when multiple settlements are pending
+  const shouldGlowMascot = settlements.length >= 2;
 
   return (
     <div className="min-h-screen flex flex-col justify-between p-3 sm:p-4 selection:bg-accent selection:text-white">
       <div>
-        <Header glowMascot={isLargeTotal} />
+        <Header glowMascot={shouldGlowMascot} />
 
         {/* Responsive Grid: Single column on mobile, 2 columns on desktop (>=1024px) */}
         <main className="w-full max-w-xl lg:max-w-5xl mx-auto mt-4">
@@ -30,8 +30,8 @@ export const AppContent: React.FC = () => {
               <ExpensesCard />
             </div>
 
-            {/* Right Column: Results ("Who pays whom") - sticky on desktop */}
-            <div className="lg:col-span-5 lg:sticky lg:top-6">
+            {/* Right Column: Sticky Results with internal scrolling if taller than viewport */}
+            <div className="lg:col-span-5 lg:sticky lg:top-4 max-h-[calc(100vh-2rem)] overflow-y-auto pr-0.5 rounded-card">
               <ResultsCard />
             </div>
           </div>
