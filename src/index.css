@@ -1,0 +1,78 @@
+@import '@fontsource/pirata-one';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+[data-theme='dark'] {
+  --color-bg: #0d0b0c;
+  --color-surface: #1a1618;
+  --color-border: #2b2427;
+  --color-text: #efe6d8;
+  --color-text-muted: #a3968d;
+  --color-accent: #c1121f;
+  --color-accent-hover: #8f0d17;
+  --color-accent-text: #ff5260;
+  --color-positive: #b7c34a;
+  --color-positive-text: #c2d148;
+  --color-negative: #c1121f;
+  --color-negative-text: #ff5260;
+  --color-focus-ring: #ff5260;
+  --shadow-carnival: 0 4px 20px -2px rgba(0, 0, 0, 0.7);
+  --carnival-vignette: radial-gradient(circle at 50% 0%, rgba(193, 18, 31, 0.08) 0%, transparent 70%);
+}
+
+[data-theme='light'] {
+  --color-bg: #f5efe4;
+  --color-surface: #eae0d0;
+  --color-border: #cfc2ad;
+  --color-text: #1d1819;
+  --color-text-muted: #5e534c;
+  --color-accent: #b0101b;
+  --color-accent-hover: #800a12;
+  --color-accent-text: #a80f1a;
+  --color-positive: #416102;
+  --color-positive-text: #365201;
+  --color-negative: #b0101b;
+  --color-negative-text: #a80f1a;
+  --color-focus-ring: #a80f1a;
+  --shadow-carnival: 0 4px 18px -2px rgba(60, 48, 38, 0.15);
+  --carnival-vignette: radial-gradient(circle at 50% 0%, rgba(176, 16, 27, 0.05) 0%, transparent 70%);
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', system-ui, sans-serif;
+  background-image: var(--carnival-vignette);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Tabular numbers for all monetary / calculation values */
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus ring standard for keyboard accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
