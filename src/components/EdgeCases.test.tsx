@@ -120,4 +120,39 @@ describe('Step 5 Edge Cases & Accessibility Tests', () => {
 
     expect(screen.getByText('2 payments to settle up')).toHaveAttribute('aria-live', 'polite');
   });
+
+  it('guarantees each card has exactly one clipped 18px blood layer and content is layered above it', () => {
+    render(<App />);
+
+    const bloodLayers = screen.getAllByTestId('card-blood-layer');
+    // Exactly 4 main cards: People, Add Expense, Expenses, Results
+    expect(bloodLayers).toHaveLength(4);
+
+    bloodLayers.forEach((layer) => {
+      expect(layer).toHaveClass('absolute');
+      expect(layer).toHaveClass('top-0');
+      expect(layer).toHaveClass('left-0');
+      expect(layer).toHaveClass('right-0');
+      expect(layer).toHaveClass('h-[18px]');
+      expect(layer).toHaveClass('overflow-hidden');
+      expect(layer).toHaveClass('pointer-events-none');
+      expect(layer).toHaveClass('z-0');
+
+      // The SVG inside should be the CardTopBlood
+      const svg = layer.querySelector('svg');
+      expect(svg).toBeInTheDocument();
+      expect(svg).toHaveAttribute('viewBox', '0 0 600 18');
+    });
+
+    // Content container sibling inside cards has relative z-10
+    bloodLayers.forEach((layer) => {
+      const parent = layer.parentElement;
+      expect(parent).toBeInTheDocument();
+      // Parent card has pt-8 sm:pt-9
+      expect(parent?.className).toMatch(/pt-8 sm:pt-9/);
+
+      const content = parent?.querySelector('.relative.z-10');
+      expect(content).toBeInTheDocument();
+    });
+  });
 });

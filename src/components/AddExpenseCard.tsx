@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useExpenseStore } from '../hooks/useExpenseStore';
 import { parseAmountToMinor } from '../lib/money';
 import { SUPPORTED_CURRENCIES } from '../lib/constants';
+import { CardTopBlood } from './decor/CardTopBlood';
 
 export const AddExpenseCard: React.FC = () => {
   const { people, currency, setCurrency, addExpense } = useExpenseStore();
@@ -12,6 +13,7 @@ export const AddExpenseCard: React.FC = () => {
   const [amountError, setAmountError] = useState<string | null>(null);
   const [selectedParticipants, setSelectedParticipants] = useState<string[]>([]);
   const [hasManuallyModifiedParticipants, setHasManuallyModifiedParticipants] = useState(false);
+  const [showAddBalloon, setShowAddBalloon] = useState(false);
 
   const descInputRef = useRef<HTMLInputElement>(null);
 
@@ -116,6 +118,10 @@ export const AddExpenseCard: React.FC = () => {
       participants: selectedParticipants,
     });
 
+    // Trigger ephemeral rising balloon animation from button
+    setShowAddBalloon(true);
+    setTimeout(() => setShowAddBalloon(false), 1200);
+
     // Clear description and amount, keep payer and participants
     setDescription('');
     setAmountInput('');
@@ -135,14 +141,22 @@ export const AddExpenseCard: React.FC = () => {
   return (
     <section
       aria-labelledby="add-expense-title"
-      className="bg-surface border border-border rounded-card p-4 sm:p-5 shadow-carnival animate-card-in"
+      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 pt-8 sm:pt-9 shadow-carnival animate-card-in overflow-hidden"
     >
-      <h2
-        id="add-expense-title"
-        className="font-display text-2xl text-text-base tracking-wide mb-3"
+      <div
+        data-testid="card-blood-layer"
+        className="absolute top-0 left-0 right-0 h-[18px] overflow-hidden pointer-events-none z-0"
       >
-        Add to the Tab
-      </h2>
+        <CardTopBlood seed={102} />
+      </div>
+
+      <div className="relative z-10">
+        <h2
+          id="add-expense-title"
+          className="font-display text-2xl text-text-base tracking-wide mb-3"
+        >
+          Add to the Tab
+        </h2>
 
       {people.length < 2 ? (
         <div className="py-4 px-4 rounded-xl border border-dashed border-border/80 bg-background/50 text-center text-sm text-text-muted">
@@ -345,18 +359,43 @@ export const AddExpenseCard: React.FC = () => {
             )}
           </div>
 
-          {/* Submit Button (Accessible contrast when disabled) */}
-          <div className="pt-2">
+          {/* Submit Button (Accessible contrast when disabled, hover blood drip, balloon rise) */}
+          <div className="pt-2 relative">
+            {showAddBalloon && (
+              <div
+                aria-hidden="true"
+                className="absolute -top-4 left-1/2 -translate-x-1/2 pointer-events-none animate-btn-balloon z-20"
+              >
+                <svg viewBox="0 0 24 36" className="w-6 h-9 drop-shadow">
+                  <ellipse cx="12" cy="11" rx="9" ry="11" fill="#c1121f" />
+                  <ellipse cx="9" cy="8" rx="2.5" ry="4" fill="#ffffff" opacity="0.45" />
+                  <polygon points="10,22 14,22 15,24 9,24" fill="#8f0d17" />
+                  <path d="M 12 24 Q 10 29 13 35" fill="none" stroke="var(--color-text-muted)" strokeWidth="0.8" />
+                </svg>
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={!isFormValid}
-              className="w-full min-h-[44px] py-2.5 px-4 rounded-xl font-semibold text-sm transition-colors shadow-sm focus-visible:ring-2 focus-visible:ring-accent-text bg-accent text-white hover:bg-accent-hover disabled:bg-surface disabled:text-text-muted disabled:border disabled:border-border disabled:opacity-90 disabled:cursor-not-allowed"
+              className="group relative w-full min-h-[44px] py-2.5 px-4 rounded-xl font-semibold text-sm transition-colors shadow-sm focus-visible:ring-2 focus-visible:ring-accent-text bg-accent text-white hover:bg-accent-hover disabled:bg-surface disabled:text-text-muted disabled:border disabled:border-border disabled:opacity-90 disabled:cursor-not-allowed overflow-visible"
             >
-              Add to the tab
+              <span>Add to the tab</span>
+
+              {/* Hover blood drip along bottom edge */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 40 10"
+                className="absolute -bottom-2 right-10 w-7 h-2 pointer-events-none select-none opacity-0 group-hover:opacity-100 group-hover:translate-y-0.5 transition-all duration-500"
+              >
+                <path d="M 5 0 C 5 3 6 5 6 7 C 6 9 5 10 3 10 C 1 10 0 9 0 7 C 0 5 1 3 1 0 Z" fill="var(--color-blood-primary)" />
+                <path d="M 25 0 C 25 2 26 4 26 5 C 26 6 25 7 24 7 C 23 7 22 6 22 5 C 22 4 23 2 23 0 Z" fill="var(--color-blood-primary)" />
+              </svg>
             </button>
           </div>
         </form>
       )}
+      </div>
     </section>
   );
 };

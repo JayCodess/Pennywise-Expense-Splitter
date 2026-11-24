@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useExpenseStore } from '../hooks/useExpenseStore';
 import { formatMoney } from '../lib/money';
 import { StormDrain } from './StormDrain';
+import { CardTopBlood } from './decor/CardTopBlood';
+import { CardBalloon } from './decor/CardBalloon';
 
 export const ResultsCard: React.FC = () => {
   const {
@@ -93,9 +95,20 @@ export const ResultsCard: React.FC = () => {
     <section
       id="results-card"
       aria-labelledby="results-title"
-      className="bg-surface border border-border rounded-card p-4 sm:p-5 shadow-carnival animate-card-in space-y-4"
+      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 pt-8 sm:pt-9 shadow-carnival animate-card-in overflow-hidden"
     >
-      <div className="flex items-center justify-between border-b border-border pb-3">
+      <div
+        data-testid="card-blood-layer"
+        className="absolute top-0 left-0 right-0 h-[18px] overflow-hidden pointer-events-none z-0"
+      >
+        <CardTopBlood seed={104} />
+      </div>
+
+      {/* Decorative balloon positioned strictly outside the card content on top right */}
+      <CardBalloon className="-top-3 -right-2" />
+
+      <div className="relative z-10 space-y-4">
+        <div className="flex items-center justify-between border-b border-border pb-3">
         <div>
           <h2 id="results-title" className="font-display text-2xl text-text-base tracking-wide flex items-center gap-2">
             <span>Who Pays Whom</span>
@@ -126,19 +139,24 @@ export const ResultsCard: React.FC = () => {
       {/* Empty State */}
       {!hasData && (
         <div className="py-8 px-4 rounded-xl border border-dashed border-border/80 bg-background/50 text-center flex flex-col items-center justify-center gap-2">
-          <StormDrain size={36} />
+          <StormDrain size={36} peekingBalloon />
           <p className="text-sm text-text-muted">
             Add people and expenses to see who owes whom.
           </p>
         </div>
       )}
 
-      {/* All Square State */}
+      {/* All Square State with balloon floating up and away */}
       {isAllSquare && (
         <div className="py-8 px-4 rounded-xl border border-dashed border-border/80 bg-background/50 text-center flex flex-col items-center justify-center gap-2 animate-card-in">
-          <span className="text-3xl select-none" aria-hidden="true">
-            🎈
-          </span>
+          <div className="animate-float-away select-none" aria-hidden="true">
+            <svg viewBox="0 0 32 48" className="w-8 h-12 inline-block">
+              <ellipse cx="16" cy="16" rx="13" ry="16" fill="#c1121f" />
+              <ellipse cx="11" cy="11" rx="3.5" ry="6" fill="#ffffff" opacity="0.4" />
+              <polygon points="13,32 19,32 20,34 12,34" fill="#8f0d17" />
+              <path d="M 16 34 Q 14 40 17 48" fill="none" stroke="var(--color-text-muted)" strokeWidth="0.8" />
+            </svg>
+          </div>
           <p className="text-base font-semibold text-text-base">All settled. For now. 🎈</p>
           <p className="text-xs text-text-muted">Nobody owes a single coin.</p>
         </div>
@@ -170,7 +188,7 @@ export const ResultsCard: React.FC = () => {
                       Direct payment to settle tab
                     </p>
                   </div>
-                  <span className="font-sans font-tabular text-base sm:text-lg font-bold text-negative-text shrink-0">
+                  <span className="font-sans font-tabular text-base sm:text-lg font-bold text-negative-text shrink-0 drop-shadow-[0_0_6px_rgba(193,18,31,0.35)]">
                     {amountFormatted}
                   </span>
                 </li>
@@ -284,13 +302,14 @@ export const ResultsCard: React.FC = () => {
               ref={banishTriggerBtnRef}
               type="button"
               onClick={() => setShowClearConfirm(true)}
-              className="text-xs text-text-muted hover:text-negative-text transition-colors py-1.5 px-2.5 rounded focus-visible:ring-2 focus-visible:ring-accent-text min-h-[36px]"
+              className="text-xs text-text-muted hover:text-negative-text hover:bg-negative/10 hover:border hover:border-negative-text/40 transition-colors py-1.5 px-2.5 rounded-lg border border-transparent focus-visible:ring-2 focus-visible:ring-accent-text min-h-[36px]"
             >
               Banish everything
             </button>
           )}
         </div>
       )}
+      </div>
     </section>
   );
 };

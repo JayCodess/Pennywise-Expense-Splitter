@@ -3,6 +3,7 @@ import { useExpenseStore } from '../hooks/useExpenseStore';
 import { Expense } from '../lib/types';
 import { formatMoney, parseAmountToMinor } from '../lib/money';
 import { StormDrain } from './StormDrain';
+import { CardTopBlood } from './decor/CardTopBlood';
 
 export const ExpensesCard: React.FC = () => {
   const { people, expenses, currency, totalSpentMinor, updateExpense, deleteExpense } =
@@ -130,23 +131,31 @@ export const ExpensesCard: React.FC = () => {
   return (
     <section
       aria-labelledby="expenses-section-title"
-      className="bg-surface border border-border rounded-card p-4 sm:p-5 shadow-carnival animate-card-in"
+      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 pt-8 sm:pt-9 shadow-carnival animate-card-in overflow-hidden"
     >
-      <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
-        <h2 id="expenses-section-title" className="font-display text-2xl text-text-base tracking-wide">
-          The Tab
-        </h2>
-        <div className="text-right">
-          <span className="text-xs text-text-muted block">Total spent</span>
-          <span data-testid="total-spent" className="font-sans font-tabular text-lg font-bold text-text-base">
-            {formatMoney(totalSpentMinor, currency)}
-          </span>
-        </div>
+      <div
+        data-testid="card-blood-layer"
+        className="absolute top-0 left-0 right-0 h-[18px] overflow-hidden pointer-events-none z-0"
+      >
+        <CardTopBlood seed={103} />
       </div>
+
+      <div className="relative z-10">
+        <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
+          <h2 id="expenses-section-title" className="font-display text-2xl text-text-base tracking-wide">
+            The Tab
+          </h2>
+          <div className="text-right">
+            <span className="text-xs text-text-muted block">Total spent</span>
+            <span data-testid="total-spent" className="font-sans font-tabular text-lg font-bold text-text-base">
+              {formatMoney(totalSpentMinor, currency)}
+            </span>
+          </div>
+        </div>
 
       {expenses.length === 0 ? (
         <div className="py-8 px-4 rounded-xl border border-dashed border-border/80 bg-background/50 text-center flex flex-col items-center justify-center gap-2">
-          <StormDrain size={36} />
+          <StormDrain size={36} peekingBalloon />
           <p className="text-sm text-text-muted">Not a single coin. Suspicious.</p>
         </div>
       ) : (
@@ -337,7 +346,7 @@ export const ExpensesCard: React.FC = () => {
                       type="button"
                       onClick={() => deleteExpense(exp.id)}
                       aria-label={`Delete ${exp.description}`}
-                      className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-text-muted hover:text-negative-text hover:bg-background transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
+                      className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-text-muted hover:text-negative-text hover:bg-negative/10 hover:border hover:border-negative-text/40 transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
                       title="Delete expense"
                     >
                       <svg
@@ -361,6 +370,7 @@ export const ExpensesCard: React.FC = () => {
           })}
         </ul>
       )}
+      </div>
     </section>
   );
 };

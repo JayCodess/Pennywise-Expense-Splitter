@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useExpenseStore } from '../hooks/useExpenseStore';
 import { StormDrain } from './StormDrain';
+import { CardTopBlood } from './decor/CardTopBlood';
 
 export const PeopleCard: React.FC = () => {
   const { people, expenses, addPerson, removePerson, loadExample } = useExpenseStore();
@@ -82,17 +83,26 @@ export const PeopleCard: React.FC = () => {
   return (
     <section
       aria-labelledby="people-section-title"
-      className="bg-surface border border-border rounded-card p-4 sm:p-5 shadow-carnival animate-card-in"
+      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 pt-8 sm:pt-9 shadow-carnival animate-card-in overflow-hidden"
     >
-      <h2
-        id="people-section-title"
-        className="font-display text-2xl text-text-base tracking-wide mb-3 flex items-center justify-between"
+      {/* Exactly ONE blood layer per card, anchored at top: 0, left: 0, right: 0 with 18px height clip */}
+      <div
+        data-testid="card-blood-layer"
+        className="absolute top-0 left-0 right-0 h-[18px] overflow-hidden pointer-events-none z-0"
       >
-        <span>Carnival Troupe</span>
-        <span className="font-sans text-xs text-text-muted font-normal">
-          {people.length} {people.length === 1 ? 'person' : 'people'}
-        </span>
-      </h2>
+        <CardTopBlood seed={101} />
+      </div>
+
+      <div className="relative z-10">
+        <h2
+          id="people-section-title"
+          className="font-display text-2xl text-text-base tracking-wide mb-3 flex items-center justify-between"
+        >
+          <span>Carnival Troupe</span>
+          <span className="font-sans text-xs text-text-muted font-normal">
+            {people.length} {people.length === 1 ? 'person' : 'people'}
+          </span>
+        </h2>
 
       {/* Add Person Form */}
       <form onSubmit={handleAddPerson} className="mb-4">
@@ -109,6 +119,9 @@ export const PeopleCard: React.FC = () => {
               value={nameInput}
               onChange={(e) => {
                 setNameInput(e.target.value);
+                if (error) setError(null);
+              }}
+              onBlur={() => {
                 if (error) setError(null);
               }}
               placeholder="Who's joining the carnival?"
@@ -178,11 +191,14 @@ export const PeopleCard: React.FC = () => {
       {/* People Chips List or Empty State */}
       {people.length === 0 ? (
         <div className="py-6 px-4 rounded-xl border border-dashed border-border/80 bg-background/50 text-center flex flex-col items-center justify-center gap-2">
-          <StormDrain size={32} />
+          <StormDrain size={32} peekingBalloon />
           <p className="text-sm text-text-muted">Nobody's down here yet… how lonely.</p>
           <button
             type="button"
-            onClick={loadExample}
+            onClick={() => {
+              setError(null);
+              loadExample();
+            }}
             className="mt-1 inline-flex items-center gap-1 text-xs text-accent-text hover:underline focus-visible:ring-1 focus-visible:ring-accent-text rounded px-1.5 py-1 min-h-[32px]"
           >
             <span>🎈</span> Load example troupe
@@ -217,6 +233,7 @@ export const PeopleCard: React.FC = () => {
           ))}
         </div>
       )}
+      </div>
     </section>
   );
 };

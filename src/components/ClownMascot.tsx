@@ -1,20 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface ClownMascotProps {
   className?: string;
   glow?: boolean;
+  grinWiden?: boolean;
 }
 
 export const ClownMascot: React.FC<ClownMascotProps> = ({
   className = '',
   glow = false,
+  grinWiden = false,
 }) => {
+  const [pupilOffset, setPupilOffset] = useState({ x: 0, y: 0 });
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  // Desktop-only pupil follow cursor (pointer: fine, throttled)
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+    const isFinePointer = window.matchMedia('(pointer: fine)').matches;
+    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!isFinePointer || isReducedMotion) return;
+
+    let rafId: number;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        if (!svgRef.current) return;
+        const rect = svgRef.current.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        const deltaX = e.clientX - centerX;
+        const deltaY = e.clientY - centerY;
+        const angle = Math.atan2(deltaY, deltaX);
+        const dist = Math.min(Math.hypot(deltaX, deltaY), 300);
+
+        // Max pupil offset of 2px
+        const maxOffset = 2.0;
+        const offset = (dist / 300) * maxOffset;
+
+        setPupilOffset({
+          x: Math.cos(angle) * offset,
+          y: Math.sin(angle) * offset,
+        });
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
     <svg
+      ref={svgRef}
       role="img"
       aria-label="Creepy clown mascot"
       viewBox="0 0 120 120"
-      className={`inline-block select-none overflow-visible w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] ${className}`}
+      className={`inline-block select-none overflow-visible w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] animate-clown-breathe ${className}`}
     >
       <defs>
         {/* Subtle, nuanced gradient for creepy corpse/chalk skin with hollow undertones */}
@@ -108,13 +154,13 @@ export const ClownMascot: React.FC<ClownMascotProps> = ({
       <g className="clown-eyes" filter="url(#eyeGlowFilter)">
         {/* Left eye: larger, rounder, fixed manic stare */}
         <ellipse cx="45" cy="50" rx="5.2" ry="4.2" fill="url(#eyeGlowGrad)" stroke="#1a1402" strokeWidth="0.8" />
-        <circle cx="45" cy="50" r="1.6" fill="#140d02" />
-        <circle cx="43.8" cy="48.8" r="0.6" fill="#ffffff" opacity="0.9" />
+        <circle cx={45 + pupilOffset.x} cy={50 + pupilOffset.y} r="1.6" fill="#140d02" />
+        <circle cx={43.8 + pupilOffset.x * 0.8} cy={48.8 + pupilOffset.y * 0.8} r="0.6" fill="#ffffff" opacity="0.9" />
 
         {/* Right eye: slightly smaller, narrowed, subtly angled squint */}
         <ellipse cx="75" cy="49.5" rx="3.8" ry="2.8" transform="rotate(-6 75 49.5)" fill="url(#eyeGlowGrad)" stroke="#1a1402" strokeWidth="0.8" />
-        <circle cx="75" cy="49.5" r="1.1" fill="#140d02" />
-        <circle cx="74.2" cy="48.8" r="0.4" fill="#ffffff" opacity="0.8" />
+        <circle cx={75 + pupilOffset.x} cy={49.5 + pupilOffset.y} r="1.1" fill="#140d02" />
+        <circle cx={74.2 + pupilOffset.x * 0.8} cy={48.8 + pupilOffset.y * 0.8} r="0.4" fill="#ffffff" opacity="0.8" />
       </g>
 
       {/* Bulbous red clown nose */}
@@ -122,7 +168,10 @@ export const ClownMascot: React.FC<ClownMascotProps> = ({
       <circle cx="58" cy="60" r="1.6" fill="#ffffff" opacity="0.6" />
 
       {/* Creepy extended wide stitched grin reaching high toward the cheeks */}
-      <g className="clown-mouth">
+      <g
+        className="clown-mouth transition-transform duration-300 origin-[60px_76px]"
+        style={{ transform: grinWiden ? 'scale(1.08, 1.14)' : 'scale(1)' }}
+      >
         {/* Blood-red lacerated grin curving sharply upward toward cheekbones */}
         <path
           d="M 28 66 Q 38 88 60 93 Q 82 88 92 66 Q 80 82 60 84 Q 40 82 28 66 Z"
@@ -163,7 +212,21 @@ export const ClownMascot: React.FC<ClownMascotProps> = ({
         {/* Grotesque upward grin extensions carving deep into the cheeks */}
         <path d="M 28 65 Q 24 58 22 55" fill="none" stroke="#940b13" strokeWidth="1.6" strokeLinecap="round" />
         <path d="M 92 65 Q 96 58 98 55" fill="none" stroke="#940b13" strokeWidth="1.6" strokeLinecap="round" />
+
+        {/* Thin glossy blood trickle from corner of grin */}
+        <path
+          d="M 28 66 C 26 71 27 76 26.5 81 C 26.5 83 25.5 84 24.5 84 C 23.5 84 22.8 83 23 81 C 23.5 76 25 71 26 66 Z"
+          fill="#800a12"
+        />
+        <circle cx="24.5" cy="83" r="0.6" fill="#ffffff" opacity="0.5" />
       </g>
+
+      {/* Thin blood trickle from lower edge of eye */}
+      <path
+        d="M 44.5 54 C 44 58 43.5 61 43.2 64 C 43 65.5 42 66.5 41 66.5 C 40 66.5 39.5 65.5 39.8 64 C 40.5 61 41.5 58 42.5 54 Z"
+        fill="#7a0810"
+      />
+      <circle cx="41" cy="65.5" r="0.5" fill="#ffffff" opacity="0.45" />
     </svg>
   );
 };
