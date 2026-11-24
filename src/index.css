@@ -10,6 +10,7 @@
 
 :root,
 [data-theme='dark'] {
+  color-scheme: dark;
   --color-bg: #0d0b0c;
   --color-surface: #1a1618;
   --color-border: #2b2427;
@@ -28,6 +29,7 @@
 }
 
 [data-theme='light'] {
+  color-scheme: light;
   --color-bg: #f5efe4;
   --color-surface: #eae0d0;
   --color-border: #cfc2ad;
@@ -53,6 +55,12 @@ body {
   background-image: var(--carnival-vignette);
   background-attachment: fixed;
   background-repeat: no-repeat;
+}
+
+/* Ensure native select options use the theme colors in all browsers */
+select option {
+  background-color: var(--color-surface);
+  color: var(--color-text);
 }
 
 /* Tabular numbers for all monetary / calculation values */
