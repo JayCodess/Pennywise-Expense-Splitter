@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { App } from '../App';
@@ -41,7 +41,7 @@ describe('Step 4 Results UI Integration Tests', () => {
     expect(balancesList).toHaveTextContent('-$72.00');
   });
 
-  it('copies plain text via Share the damage button and shows temporary confirmation', async () => {
+  it('opens share menu and copies plain text summary with temporary confirmation', async () => {
     const user = userEvent.setup();
 
     // Mock navigator.clipboard with Object.defineProperty
@@ -62,24 +62,22 @@ describe('Step 4 Results UI Integration Tests', () => {
     const shareBtn = screen.getByRole('button', { name: /share the damage/i });
     await user.click(shareBtn);
 
+    // Verify share menu opened
+    const copyOption = screen.getByRole('menuitem', { name: /copy text summary/i });
+    expect(copyOption).toBeInTheDocument();
+
+    await user.click(copyOption);
+
     // Verify clipboard was called with formatted text
     expect(writeTextMock).toHaveBeenCalled();
     const copiedText = writeTextMock.mock.calls[0][0];
-    expect(copiedText).toContain('🎈 Pennywise Tab');
+    expect(copiedText).toContain('🎈 Pennywise:');
     expect(copiedText).toContain('Total spent: $474.00');
-    expect(copiedText).toContain('Ben owes Anna $78.00');
-    expect(copiedText).toContain('Chris owes Anna $72.00');
+    expect(copiedText).toContain('Ben → Anna: $78.00');
+    expect(copiedText).toContain('Chris → Anna: $72.00');
 
-    // Button label changes to "Copied… they'll see it."
+    // Toast message appears
     expect(screen.getByText(/Copied… they'll see it\./i)).toBeInTheDocument();
-
-    // Resets after 2 seconds
-    await waitFor(
-      () => {
-        expect(screen.getByText(/Share the damage/i)).toBeInTheDocument();
-      },
-      { timeout: 2500 }
-    );
   });
 
   it('renders collapsible How is this calculated section with formula', async () => {

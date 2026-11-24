@@ -4,6 +4,7 @@ import { formatMoney } from '../lib/money';
 import { StormDrain } from './StormDrain';
 import { CardTopBlood } from './decor/CardTopBlood';
 import { CardBalloon } from './decor/CardBalloon';
+import { ShareMenu } from './ShareMenu';
 
 export const ResultsCard: React.FC = () => {
   const {
@@ -12,23 +13,15 @@ export const ResultsCard: React.FC = () => {
     currency,
     balances,
     settlements,
-    totalSpentMinor,
     clearAll,
   } = useExpenseStore();
 
-  const [copied, setCopied] = useState(false);
+  const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
+  const shareButtonRef = useRef<HTMLButtonElement>(null);
   const banishTriggerBtnRef = useRef<HTMLButtonElement>(null);
   const cancelBanishBtnRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    let timer: number;
-    if (copied) {
-      timer = window.setTimeout(() => setCopied(false), 2000);
-    }
-    return () => clearTimeout(timer);
-  }, [copied]);
 
   // Handle Escape key to cancel Banish confirmation and focus cancel button when open
   useEffect(() => {
@@ -48,37 +41,6 @@ export const ResultsCard: React.FC = () => {
 
   const getPersonName = (id: string) => {
     return people.find((p) => p.id === id)?.name || id;
-  };
-
-  const handleShare = async () => {
-    const lines = [
-      `🎈 Pennywise Tab — Everyone pays in the end.`,
-      `Total spent: ${formatMoney(totalSpentMinor, currency)}`,
-      '',
-      'Settlements:',
-      ...settlements.map((s) => `• ${getPersonName(s.from)} owes ${getPersonName(s.to)} ${formatMoney(s.amountMinor, currency)}`),
-    ];
-    const text = lines.join('\n');
-
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(text);
-        setCopied(true);
-      } else {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-9999px';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        setCopied(true);
-      }
-    } catch {
-      setCopied(false);
-    }
   };
 
   const hasData = people.length > 0 && expenses.length > 0;
@@ -124,16 +86,36 @@ export const ResultsCard: React.FC = () => {
           </p>
         </div>
 
-        {settlements.length > 0 && (
+        <div className="relative shrink-0">
           <button
+            ref={shareButtonRef}
             type="button"
-            onClick={handleShare}
-            className="min-h-[44px] px-3.5 py-1.5 rounded-xl border border-border bg-background text-xs font-semibold text-text-base hover:border-accent-text hover:text-accent-text transition-colors flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-accent-text shrink-0"
+            onClick={() => {
+              if (settlements.length > 0) {
+                setIsShareMenuOpen((prev) => !prev);
+              }
+            }}
+            aria-haspopup="menu"
+            aria-expanded={isShareMenuOpen}
+            aria-disabled={settlements.length === 0}
+            title={settlements.length === 0 ? 'Add expenses first' : 'Share the damage'}
+            className={`min-h-[44px] px-3.5 py-1.5 rounded-xl border border-border bg-background text-xs font-semibold text-text-base flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-accent-text shrink-0 transition-colors ${
+              settlements.length === 0
+                ? 'opacity-50 cursor-not-allowed text-text-muted'
+                : 'hover:border-accent-text hover:text-accent-text'
+            }`}
           >
-            <span>{copied ? '✓' : '🎈'}</span>
-            <span>{copied ? "Copied… they'll see it." : 'Share the damage'}</span>
+            <span>🎈</span>
+            <span>Share the damage</span>
           </button>
-        )}
+
+          {/* Share Menu Dropdown / Bottom Sheet */}
+          <ShareMenu
+            buttonRef={shareButtonRef}
+            isOpen={isShareMenuOpen}
+            onClose={() => setIsShareMenuOpen(false)}
+          />
+        </div>
       </div>
 
       {/* Empty State */}

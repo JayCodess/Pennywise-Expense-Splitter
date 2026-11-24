@@ -15,8 +15,9 @@ export function useTheme() {
       // Fallback if localStorage is inaccessible
     }
 
-    if (typeof window !== 'undefined' && window.matchMedia) {
-      if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+    if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+      const mql = window.matchMedia('(prefers-color-scheme: light)');
+      if (mql && mql.matches) {
         return 'light';
       }
     }

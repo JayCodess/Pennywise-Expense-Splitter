@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ExpenseProvider, useExpenseStore } from './hooks/useExpenseStore';
+import { ToastProvider } from './hooks/useToast';
 import { Header } from './components/Header';
 import { PeopleCard } from './components/PeopleCard';
 import { AddExpenseCard } from './components/AddExpenseCard';
@@ -91,7 +92,9 @@ export const AppContent: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <ExpenseProvider>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </ExpenseProvider>
   );
 };
