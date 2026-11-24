@@ -227,4 +227,133 @@ describe('Settlement and Balance Calculations', () => {
       expect(simulatedNet.get(b.personId)).toBe(b.balanceMinor);
     }
   });
+
+  // Test 7: Remainder leftovers rotation avoids bias (Jay, Palak, Jai)
+  it('7. avoids remainder bias across multiple expenses: Jay, Palak, Jai -> Jai pays Jay 50.00', () => {
+    const jay: Person = { id: 'jay', name: 'Jay' };
+    const palak: Person = { id: 'palak', name: 'Palak' };
+    const jai: Person = { id: 'jai', name: 'Jai' };
+    const people = [jay, palak, jai];
+
+    // Expense 1: ₹50 paid by Palak, split with everyone
+    // Expense 2: ₹100 paid by Jay, split with everyone
+    const expenses: Expense[] = [
+      {
+        id: 'e1',
+        description: 'Snacks',
+        amountMinor: 5000, // ₹50.00
+        paidBy: 'palak',
+        participants: ['jay', 'palak', 'jai'],
+      },
+      {
+        id: 'e2',
+        description: 'Ride tickets',
+        amountMinor: 10000, // ₹100.00
+        paidBy: 'jay',
+        participants: ['jay', 'palak', 'jai'],
+      },
+    ];
+
+    const balances = computeBalances(people, expenses);
+    const balanceMap = new Map(balances.map((b) => [b.personId, b.balanceMinor]));
+
+    // Balances are Jay +5000, Palak 0, Jai -5000
+    expect(balanceMap.get('jay')).toBe(5000);
+    expect(balanceMap.get('palak')).toBe(0);
+    expect(balanceMap.get('jai')).toBe(-5000);
+
+    const sumBalances = balances.reduce((sum, b) => sum + b.balanceMinor, 0);
+    expect(sumBalances).toBe(0);
+
+    // Expected: exactly one settlement, Jai pays Jay 5000 minor units (₹50.00)
+    const settlements = computeSettlements(people, expenses);
+    expect(settlements).toHaveLength(1);
+    expect(settlements[0]).toEqual({
+      from: 'jai',
+      to: 'jay',
+      amountMinor: 5000,
+    });
+  });
+
+  // Test 8: Three expenses of 10.00 split 3 ways rotate remainder cents
+  it('8. three expenses of 10.00 each split 3 ways gives every person an exact total share of 10.00', () => {
+    const p1: Person = { id: 'p1', name: 'Person 1' };
+    const p2: Person = { id: 'p2', name: 'Person 2' };
+    const p3: Person = { id: 'p3', name: 'Person 3' };
+    const people = [p1, p2, p3];
+
+    const expenses: Expense[] = [
+      {
+        id: 'e1',
+        description: 'Item 1',
+        amountMinor: 1000, // $10.00
+        paidBy: 'p1',
+        participants: ['p1', 'p2', 'p3'],
+      },
+      {
+        id: 'e2',
+        description: 'Item 2',
+        amountMinor: 1000, // $10.00
+        paidBy: 'p1',
+        participants: ['p1', 'p2', 'p3'],
+      },
+      {
+        id: 'e3',
+        description: 'Item 3',
+        amountMinor: 1000, // $10.00
+        paidBy: 'p1',
+        participants: ['p1', 'p2', 'p3'],
+      },
+    ];
+
+    const balances = computeBalances(people, expenses);
+    for (const b of balances) {
+      expect(b.totalShareMinor).toBe(1000);
+    }
+
+    const sumBalances = balances.reduce((sum, b) => sum + b.balanceMinor, 0);
+    expect(sumBalances).toBe(0);
+  });
+
+  // Test 9: Property-style test for random expenses where everyone participates in all
+  it('9. property: for random expenses where everyone participates, no two total shares differ by > 1 minor unit, and balances sum to 0', () => {
+    const people: Person[] = [
+      { id: 'p1', name: 'Person 1' },
+      { id: 'p2', name: 'Person 2' },
+      { id: 'p3', name: 'Person 3' },
+      { id: 'p4', name: 'Person 4' },
+      { id: 'p5', name: 'Person 5' },
+    ];
+    const participantIds = people.map((p) => p.id);
+
+    // 20 iterations with varied random amounts and expense counts
+    for (let run = 0; run < 20; run++) {
+      const expensesCount = 10 + Math.floor(Math.random() * 30);
+      const expenses: Expense[] = [];
+
+      for (let i = 0; i < expensesCount; i++) {
+        const randomPayer = people[Math.floor(Math.random() * people.length)].id;
+        const randomAmount = Math.floor(Math.random() * 10000) + 1; // 1 to 10000 minor units
+        expenses.push({
+          id: `exp-${run}-${i}`,
+          description: `Random expense ${i}`,
+          amountMinor: randomAmount,
+          paidBy: randomPayer,
+          participants: participantIds,
+        });
+      }
+
+      const balances = computeBalances(people, expenses);
+
+      // Invariant 1: Balances sum to exactly 0
+      const sumBalances = balances.reduce((sum, b) => sum + b.balanceMinor, 0);
+      expect(sumBalances).toBe(0);
+
+      // Invariant 2: No two people's total shares differ by more than 1 minor unit
+      const shares = balances.map((b) => b.totalShareMinor);
+      const minShare = Math.min(...shares);
+      const maxShare = Math.max(...shares);
+      expect(maxShare - minShare).toBeLessThanOrEqual(1);
+    }
+  });
 });
