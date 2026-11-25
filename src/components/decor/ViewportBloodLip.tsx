@@ -33,7 +33,7 @@ export const ViewportBloodLip: React.FC = () => {
   return (
     <div
       aria-hidden="true"
-      className="fixed top-0 left-0 right-0 pointer-events-none select-none z-30 overflow-hidden"
+      className="absolute top-0 left-0 right-0 pointer-events-none select-none z-0 overflow-hidden"
     >
       <svg
         viewBox="0 0 1200 210"
