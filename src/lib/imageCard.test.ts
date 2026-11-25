@@ -31,6 +31,7 @@ describe('imageCard - renderReceiptCardBlob', () => {
     const originalGetContext = HTMLCanvasElement.prototype.getContext;
     const originalToBlob = HTMLCanvasElement.prototype.toBlob;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue({
       createRadialGradient: () => ({
         addColorStop: vi.fn(),
@@ -54,7 +55,7 @@ describe('imageCard - renderReceiptCardBlob', () => {
       drawImage: vi.fn(),
       fillText: vi.fn(),
       measureText: vi.fn().mockReturnValue({ width: 100 }),
-    }) as unknown as CanvasRenderingContext2D;
+    }) as unknown as typeof HTMLCanvasElement.prototype.getContext;
 
     HTMLCanvasElement.prototype.toBlob = vi.fn().mockImplementation((callback) => {
       callback(new Blob(['fake-png-data'], { type: 'image/png' }));
