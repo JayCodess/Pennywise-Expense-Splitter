@@ -26,11 +26,11 @@ describe('sharing - buildTextSummary', () => {
 
     expect(result).toBe(
       '🎈 Pennywise: 2026-11-25\n' +
-      'Total spent: ₹474.00\n' +
-      'Who pays whom:\n' +
-      '• Ben → Anna: ₹78.00\n' +
-      '• Chris → Anna: ₹72.00\n' +
-      'https://pennywise.app'
+        'Total spent: ₹474.00\n' +
+        'Who pays whom:\n' +
+        '• Ben → Anna: ₹78.00\n' +
+        '• Chris → Anna: ₹72.00\n' +
+        'https://pennywise.app'
     );
   });
 
@@ -46,9 +46,9 @@ describe('sharing - buildTextSummary', () => {
 
     expect(result).toBe(
       '🎈 Pennywise: 2026-11-25\n' +
-      'Total spent: $20.00\n' +
-      'All settled. For now. 🎈\n' +
-      'https://pennywise.app'
+        'Total spent: $20.00\n' +
+        'All settled. For now. 🎈\n' +
+        'https://pennywise.app'
     );
   });
 
@@ -87,9 +87,7 @@ describe('sharing - buildTextSummary', () => {
       { id: 'p1', name: 'Sir Alexander Bartholomew of Carnival Woods' },
       { id: 'p2', name: 'Lady Genevieve Evangeline Montgomery' },
     ];
-    const settlements: Settlement[] = [
-      { from: 'p1', to: 'p2', amountMinor: 5000 },
-    ];
+    const settlements: Settlement[] = [{ from: 'p1', to: 'p2', amountMinor: 5000 }];
 
     const result = buildTextSummary({
       people: longPeople,
@@ -100,7 +98,9 @@ describe('sharing - buildTextSummary', () => {
       origin: 'https://pennywise.app',
     });
 
-    expect(result).toContain('• Sir Alexander Bartholomew of Carnival Woods → Lady Genevieve Evangeline Montgomery: £50.00');
+    expect(result).toContain(
+      '• Sir Alexander Bartholomew of Carnival Woods → Lady Genevieve Evangeline Montgomery: £50.00'
+    );
   });
 });
 
@@ -112,7 +112,9 @@ describe('sharing - buildSocialShareUrls', () => {
     expect(urls.whatsappUrl).toContain('https://wa.me/?text=');
     expect(urls.whatsappUrl).toContain(encodeURIComponent(summary));
 
-    expect(urls.telegramUrl).toContain('https://t.me/share/url?url=https%3A%2F%2Fpennywise.app&text=');
+    expect(urls.telegramUrl).toContain(
+      'https://t.me/share/url?url=https%3A%2F%2Fpennywise.app&text='
+    );
 
     expect(urls.smsUrl).toMatch(/^sms:[&?]body=/);
 

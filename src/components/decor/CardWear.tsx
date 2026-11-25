@@ -5,10 +5,7 @@ interface CardWearProps {
   corner?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }
 
-export const CardWear: React.FC<CardWearProps> = ({
-  className = '',
-  corner = 'bottom-right',
-}) => {
+export const CardWear: React.FC<CardWearProps> = ({ className = '', corner = 'bottom-right' }) => {
   const getCornerClasses = () => {
     switch (corner) {
       case 'top-left':

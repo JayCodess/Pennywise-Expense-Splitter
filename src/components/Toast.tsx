@@ -101,9 +101,7 @@ export const Toast: React.FC = () => {
         className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 z-50 max-w-sm mx-auto sm:mx-0 p-3.5 rounded-xl bg-surface border border-accent-text/60 shadow-carnival text-text-base flex items-center gap-2.5 animate-card-in cursor-pointer select-none"
       >
         <span className="text-base shrink-0">{toast.icon || '🎈'}</span>
-        <p className="text-xs text-text-base font-medium truncate">
-          {toast.text}
-        </p>
+        <p className="text-xs text-text-base font-medium truncate">{toast.text}</p>
       </div>
     );
   }

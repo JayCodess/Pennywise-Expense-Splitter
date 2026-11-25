@@ -5,15 +5,9 @@ interface FingerSmearProps {
   side?: 'left' | 'right';
 }
 
-export const FingerSmear: React.FC<FingerSmearProps> = ({
-  className = '',
-  side = 'left',
-}) => {
+export const FingerSmear: React.FC<FingerSmearProps> = ({ className = '', side = 'left' }) => {
   return (
-    <div
-      aria-hidden="true"
-      className={`absolute pointer-events-none select-none z-0 ${className}`}
-    >
+    <div aria-hidden="true" className={`absolute pointer-events-none select-none z-0 ${className}`}>
       <svg
         viewBox="0 0 60 120"
         className={`w-12 h-24 opacity-25 dark:opacity-30 ${side === 'right' ? 'scale-x-[-1]' : ''}`}

@@ -11,9 +11,7 @@ describe('Step 4 Results UI Integration Tests', () => {
 
   it('displays empty state before people and expenses are added', () => {
     render(<App />);
-    expect(
-      screen.getByText('Add people and expenses to see who owes whom.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Add people and expenses to see who owes whom.')).toBeInTheDocument();
   });
 
   it('displays exact Step 1 Test 1 settlements for Anna, Ben, and Chris', async () => {
@@ -101,20 +99,14 @@ describe('Step 4 Results UI Integration Tests', () => {
     const banishBtn = screen.getByRole('button', { name: 'Banish everything' });
     await user.click(banishBtn);
 
-    expect(
-      screen.getByText('This will make everything disappear. Sure?')
-    ).toBeInTheDocument();
+    expect(screen.getByText('This will make everything disappear. Sure?')).toBeInTheDocument();
 
     // Click confirm
     const yesBanishBtn = screen.getByRole('button', { name: 'Yes, banish' });
     await user.click(yesBanishBtn);
 
     // State is cleared
-    expect(
-      screen.getByText('Add people and expenses to see who owes whom.')
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Nobody's down here yet… how lonely.")
-    ).toBeInTheDocument();
+    expect(screen.getByText('Add people and expenses to see who owes whom.')).toBeInTheDocument();
+    expect(screen.getByText("Nobody's down here yet… how lonely.")).toBeInTheDocument();
   });
 });

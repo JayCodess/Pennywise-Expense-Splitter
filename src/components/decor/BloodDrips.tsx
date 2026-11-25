@@ -1,5 +1,10 @@
 import React, { useMemo } from 'react';
-import { generateHorizontalBloodEdge, generateVerticalBloodTrickle, createPRNG, DripSpec } from './bloodUtils';
+import {
+  generateHorizontalBloodEdge,
+  generateVerticalBloodTrickle,
+  createPRNG,
+  DripSpec,
+} from './bloodUtils';
 
 interface BloodDripsProps {
   edge?: 'top' | 'bottom' | 'left' | 'right';
@@ -62,9 +67,7 @@ export const BloodDrips: React.FC<BloodDripsProps> = ({
     <svg
       aria-hidden="true"
       viewBox={
-        bloodData.type === 'horizontal'
-          ? `0 0 ${width} ${maxDripLength + 20}`
-          : `0 0 24 ${height}`
+        bloodData.type === 'horizontal' ? `0 0 ${width} ${maxDripLength + 20}` : `0 0 24 ${height}`
       }
       className={`pointer-events-none select-none overflow-visible animate-drip-grow ${className}`}
       style={{

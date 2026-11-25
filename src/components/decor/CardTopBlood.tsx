@@ -14,10 +14,7 @@ interface CardTopBloodProps {
  * - Desaturated crimson so it accents the card without overpowering text.
  * - 100% deterministic using seeded PRNG.
  */
-export const CardTopBlood: React.FC<CardTopBloodProps> = ({
-  seed = 101,
-  className = '',
-}) => {
+export const CardTopBlood: React.FC<CardTopBloodProps> = ({ seed = 101, className = '' }) => {
   const { path, highlights } = useMemo(() => {
     const rand = createPRNG(seed);
     const width = 600;

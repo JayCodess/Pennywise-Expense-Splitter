@@ -21,10 +21,10 @@ describe('csvExport - pure helpers', () => {
     expect(escapeCSVCell('-cmd|calc')).toBe("'-cmd|calc");
     expect(escapeCSVCell('@cmd')).toBe("'@cmd");
     expect(escapeCSVCell('\talert(1)')).toBe("'\talert(1)");
-    expect(escapeCSVCell('\rnotice')).toBe("\"'\rnotice\"");
+    expect(escapeCSVCell('\rnotice')).toBe('"\'\rnotice"');
     // If it has dangerous prefix AND commas/quotes, it is prepended AND enclosed in quotes
-    expect(escapeCSVCell('=1+1,2')).toBe("\"'=1+1,2\"");
-    expect(escapeCSVCell('=cmd"quote"')).toBe("\"'=cmd\"\"quote\"\"\"");
+    expect(escapeCSVCell('=1+1,2')).toBe('"\'=1+1,2"');
+    expect(escapeCSVCell('=cmd"quote"')).toBe('"\'=cmd""quote"""');
   });
 
   it('generates CSV with UTF-8 BOM, decimal amounts, and proper sections', () => {
@@ -65,7 +65,9 @@ describe('csvExport - pure helpers', () => {
     // Check Title and Sections
     expect(csv).toContain('Pennywise: expense summary');
     expect(csv).toContain('EXPENSES');
-    expect(csv).toContain('"Apartment, 3 Nights",300.50,"Anna ""The Boss""","Anna ""The Boss""; Ben, Jr.; कबीर (Kabir)"');
+    expect(csv).toContain(
+      '"Apartment, 3 Nights",300.50,"Anna ""The Boss""","Anna ""The Boss""; Ben, Jr.; कबीर (Kabir)"'
+    );
     expect(csv).toContain('SETTLEMENTS');
     expect(csv).toContain('"Ben, Jr.","Anna ""The Boss""",78.00');
   });

@@ -5,7 +5,7 @@
 export function createPRNG(seed: number) {
   let s = seed >>> 0;
   return function next() {
-    s = (s + 0x6D2B79F5) | 0;
+    s = (s + 0x6d2b79f5) | 0;
     let t = Math.imul(s ^ (s >>> 15), 1 | s);
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
@@ -26,7 +26,12 @@ export interface GeneratedBloodEdge {
   path: string;
   stemHighlights: string[];
   bulbHighlights: { cx: number; cy: number; rx: number; ry: number }[];
-  detachedDroplets: { cx: number; cy: number; r: number; highlight: { cx: number; cy: number; rx: number; ry: number } }[];
+  detachedDroplets: {
+    cx: number;
+    cy: number;
+    r: number;
+    highlight: { cx: number; cy: number; rx: number; ry: number };
+  }[];
 }
 
 /**
@@ -48,7 +53,12 @@ export function generateHorizontalBloodEdge(
   const rand = createPRNG(seed);
   const stemHighlights: string[] = [];
   const bulbHighlights: { cx: number; cy: number; rx: number; ry: number }[] = [];
-  const detachedDroplets: { cx: number; cy: number; r: number; highlight: { cx: number; cy: number; rx: number; ry: number } }[] = [];
+  const detachedDroplets: {
+    cx: number;
+    cy: number;
+    r: number;
+    highlight: { cx: number; cy: number; rx: number; ry: number };
+  }[] = [];
 
   // Sort drips by x
   const sortedDrips = [...drips].sort((a, b) => a.x - b.x);
@@ -71,7 +81,11 @@ export function generateHorizontalBloodEdge(
       const nextX = Math.max(0, currentX - stepSize);
 
       // Check if there are drips between nextX and currentX
-      while (dripIdx >= 0 && sortedDrips[dripIdx].x >= nextX && sortedDrips[dripIdx].x <= currentX) {
+      while (
+        dripIdx >= 0 &&
+        sortedDrips[dripIdx].x >= nextX &&
+        sortedDrips[dripIdx].x <= currentX
+      ) {
         const drip = sortedDrips[dripIdx];
         const halfRoot = Math.max(drip.stemWidth * 1.5, 6);
         const rootRight = Math.min(width, drip.x + halfRoot);
@@ -152,11 +166,7 @@ export function generateHorizontalBloodEdge(
 /**
  * Generates an organic vertical blood trickle running down a side border.
  */
-export function generateVerticalBloodTrickle(
-  height: number,
-  side: 'left' | 'right',
-  seed: number
-) {
+export function generateVerticalBloodTrickle(height: number, side: 'left' | 'right', seed: number) {
   const rand = createPRNG(seed);
   const startY = 0;
   const trickleLen = Math.min(height * 0.85, 50 + rand() * 70);

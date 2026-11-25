@@ -2,7 +2,15 @@
  * React Context provider and store hook for application state, persistence, and derived settlements.
  */
 
-import React, { createContext, useContext, useReducer, useEffect, useMemo, useCallback, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useMemo,
+  useCallback,
+  useState,
+} from 'react';
 import { Person, Expense, Settlement, PersonBalance } from '../lib/types';
 import {
   ExpenseState,
@@ -216,9 +224,12 @@ export const ExpenseProvider: React.FC<{ children: React.ReactNode }> = ({ child
     dispatch({ type: 'CLEAR_ALL' });
   }, [isViewMode]);
 
-  const hydrate = useCallback((data: { people: Person[]; expenses: Expense[]; currency: string }) => {
-    dispatch({ type: 'HYDRATE', payload: data });
-  }, []);
+  const hydrate = useCallback(
+    (data: { people: Person[]; expenses: Expense[]; currency: string }) => {
+      dispatch({ type: 'HYDRATE', payload: data });
+    },
+    []
+  );
 
   const value = useMemo(
     () => ({

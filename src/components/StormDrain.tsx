@@ -37,7 +37,16 @@ export const StormDrain: React.FC<StormDrainProps> = ({
       </defs>
 
       {/* Drain frame / concrete kerb */}
-      <rect x="2" y="2" width="60" height="32" rx="4" fill="url(#grateFrameGrad)" stroke="#2b2427" strokeWidth="1.5" />
+      <rect
+        x="2"
+        y="2"
+        width="60"
+        height="32"
+        rx="4"
+        fill="url(#grateFrameGrad)"
+        stroke="#2b2427"
+        strokeWidth="1.5"
+      />
       {/* Dark sewer opening void */}
       <rect x="6" y="6" width="52" height="24" rx="2" fill="#080708" />
 
@@ -46,17 +55,73 @@ export const StormDrain: React.FC<StormDrainProps> = ({
         <g>
           {/* Top curve of red balloon peering up from the darkness */}
           <path d="M 22 28 C 22 14 42 14 42 28 Z" fill="url(#peekBalloonGrad)" />
-          <ellipse cx="28" cy="18" rx="2.5" ry="4" transform="rotate(-20 28 18)" fill="#ffffff" opacity="0.35" />
+          <ellipse
+            cx="28"
+            cy="18"
+            rx="2.5"
+            ry="4"
+            transform="rotate(-20 28 18)"
+            fill="#ffffff"
+            opacity="0.35"
+          />
         </g>
       )}
 
       {/* Iron grate bars */}
-      <line x1="13" y1="6" x2="13" y2="30" stroke="#5a5056" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="21" y1="6" x2="21" y2="30" stroke="#5a5056" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="29" y1="6" x2="29" y2="30" stroke="#5a5056" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="37" y1="6" x2="37" y2="30" stroke="#5a5056" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="45" y1="6" x2="45" y2="30" stroke="#5a5056" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="53" y1="6" x2="53" y2="30" stroke="#5a5056" strokeWidth="2.5" strokeLinecap="round" />
+      <line
+        x1="13"
+        y1="6"
+        x2="13"
+        y2="30"
+        stroke="#5a5056"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="21"
+        y1="6"
+        x2="21"
+        y2="30"
+        stroke="#5a5056"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="29"
+        y1="6"
+        x2="29"
+        y2="30"
+        stroke="#5a5056"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="37"
+        y1="6"
+        x2="37"
+        y2="30"
+        stroke="#5a5056"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="45"
+        y1="6"
+        x2="45"
+        y2="30"
+        stroke="#5a5056"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="53"
+        y1="6"
+        x2="53"
+        y2="30"
+        stroke="#5a5056"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
 
       {/* Faint eerie glowing pair of eyes peering out from between middle bars */}
       <g className={blinkingEyes ? 'animate-drain-blink' : ''}>

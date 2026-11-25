@@ -30,14 +30,12 @@ export const SharedTripBanner: React.FC<SharedTripBannerProps> = ({
       >
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="text-2xl select-none" aria-hidden="true">⚠️</span>
+            <span className="text-2xl select-none" aria-hidden="true">
+              ⚠️
+            </span>
             <div>
-              <p className="font-semibold text-sm text-negative-text">
-                Could not load shared link
-              </p>
-              <p className="text-xs text-text-muted mt-0.5">
-                {errorMessage}
-              </p>
+              <p className="font-semibold text-sm text-negative-text">Could not load shared link</p>
+              <p className="text-xs text-text-muted mt-0.5">{errorMessage}</p>
             </div>
           </div>
           {onDismissError && (
@@ -75,10 +73,13 @@ export const SharedTripBanner: React.FC<SharedTripBannerProps> = ({
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="text-2xl select-none" aria-hidden="true">🎈</span>
+          <span className="text-2xl select-none" aria-hidden="true">
+            🎈
+          </span>
           <div>
             <p className="font-semibold text-sm text-text-base">
-              You're viewing a shared trip ({personCount} {personCount === 1 ? 'person' : 'people'}, {expenseCount} {expenseCount === 1 ? 'expense' : 'expenses'}).
+              You're viewing a shared trip ({personCount} {personCount === 1 ? 'person' : 'people'},{' '}
+              {expenseCount} {expenseCount === 1 ? 'expense' : 'expenses'}).
             </p>
             <p className="text-xs text-text-muted mt-0.5">
               Read-only view. Your saved data is untouched.
@@ -88,7 +89,9 @@ export const SharedTripBanner: React.FC<SharedTripBannerProps> = ({
 
         {showConfirmReplace ? (
           <div className="flex items-center gap-2 w-full sm:w-auto justify-end bg-background/80 p-2 rounded-xl border border-border">
-            <span className="text-xs font-medium text-negative-text">Replace your current expenses?</span>
+            <span className="text-xs font-medium text-negative-text">
+              Replace your current expenses?
+            </span>
             <button
               type="button"
               onClick={onImport}

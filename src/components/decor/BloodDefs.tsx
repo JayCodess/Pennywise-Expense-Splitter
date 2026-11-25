@@ -34,23 +34,12 @@ export const BloodDefs: React.FC = () => {
 
         {/* Soft contact shadow beneath blood pool and drips */}
         <filter id="bloodContactShadow" x="-20%" y="-20%" width="140%" height="160%">
-          <feDropShadow
-            dx="0"
-            dy="2.5"
-            stdDeviation="2"
-            floodColor="#0f0102"
-            floodOpacity="0.32"
-          />
+          <feDropShadow dx="0" dy="2.5" stdDeviation="2" floodColor="#0f0102" floodOpacity="0.32" />
         </filter>
 
         {/* Organic edge displacement: subtle feTurbulence for natural micro-irregularities */}
         <filter id="bloodOrganicEdge" x="-10%" y="-10%" width="120%" height="130%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.04"
-            numOctaves="2"
-            result="noise"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
           <feDisplacementMap
             in="SourceGraphic"
             in2="noise"

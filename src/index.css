@@ -28,7 +28,11 @@
   --color-blood-dark: #450308;
   --color-blood-highlight: #ff6b78;
   --shadow-carnival: 0 4px 20px -2px rgba(0, 0, 0, 0.7);
-  --carnival-vignette: radial-gradient(circle at 50% 0%, rgba(193, 18, 31, 0.09) 0%, transparent 70%);
+  --carnival-vignette: radial-gradient(
+    circle at 50% 0%,
+    rgba(193, 18, 31, 0.09) 0%,
+    transparent 70%
+  );
 }
 
 [data-theme='light'] {
@@ -50,7 +54,11 @@
   --color-blood-dark: #36070a;
   --color-blood-highlight: #a33b41;
   --shadow-carnival: 0 4px 18px -2px rgba(60, 48, 38, 0.15);
-  --carnival-vignette: radial-gradient(circle at 50% 0%, rgba(176, 16, 27, 0.05) 0%, transparent 70%);
+  --carnival-vignette: radial-gradient(
+    circle at 50% 0%,
+    rgba(176, 16, 27, 0.05) 0%,
+    transparent 70%
+  );
 }
 
 body {
@@ -81,7 +89,8 @@ select option {
 }
 
 @keyframes vignetteDim {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.65;
   }
   50% {

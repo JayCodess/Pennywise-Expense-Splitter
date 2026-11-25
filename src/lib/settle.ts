@@ -34,9 +34,7 @@ export function splitExpense(
     return shares;
   }
 
-  const orderMap = peopleOrder
-    ? new Map(peopleOrder.map((id, index) => [id, index]))
-    : null;
+  const orderMap = peopleOrder ? new Map(peopleOrder.map((id, index) => [id, index])) : null;
 
   // Rank participants: lowest running extra tally first, ties broken by stable people order
   const sortedParticipants = [...expense.participants].sort((a, b) => {
@@ -76,10 +74,7 @@ export function splitExpense(
  * Balance = total paid − total own share.
  * The sum of all balances across all participants is guaranteed to be 0.
  */
-export function computeBalances(
-  people: Person[],
-  expenses: Expense[]
-): PersonBalance[] {
+export function computeBalances(people: Person[], expenses: Expense[]): PersonBalance[] {
   const personMap = new Map<string, PersonBalance>();
   const peopleOrder = people.map((p) => p.id);
   const extraTallies = new Map<string, number>();
@@ -132,10 +127,7 @@ export function computeBalances(
  * Returns an array of Settlements: [{ from, to, amountMinor }].
  * Ignores zero balances.
  */
-export function computeSettlements(
-  people: Person[],
-  expenses: Expense[]
-): Settlement[] {
+export function computeSettlements(people: Person[], expenses: Expense[]): Settlement[] {
   const balances = computeBalances(people, expenses);
 
   // Separate into debtors (negative balance) and creditors (positive balance)

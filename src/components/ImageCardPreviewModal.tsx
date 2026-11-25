@@ -148,16 +148,19 @@ export const ImageCardPreviewModal: React.FC<ImageCardPreviewModalProps> = ({
 
   const handleShareFile = () => {
     if (fileToShare && navigator.share) {
-      navigator.share({
-        files: [fileToShare],
-        title: 'Pennywise: expense summary',
-      }).then(() => {
-        showToast('Image shared', '🎈');
-      }).catch((err) => {
-        if (err.name !== 'AbortError') {
-          showToast('Could not share image', '⚠️');
-        }
-      });
+      navigator
+        .share({
+          files: [fileToShare],
+          title: 'Pennywise: expense summary',
+        })
+        .then(() => {
+          showToast('Image shared', '🎈');
+        })
+        .catch((err) => {
+          if (err.name !== 'AbortError') {
+            showToast('Could not share image', '⚠️');
+          }
+        });
     }
   };
 
@@ -184,7 +187,10 @@ export const ImageCardPreviewModal: React.FC<ImageCardPreviewModalProps> = ({
         <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background/50">
           <div className="flex items-center gap-2">
             <span className="text-lg">🎈</span>
-            <h3 id="image-card-modal-title" className="font-display text-lg text-text-base tracking-wide">
+            <h3
+              id="image-card-modal-title"
+              className="font-display text-lg text-text-base tracking-wide"
+            >
               Receipt Image Card
             </h3>
           </div>

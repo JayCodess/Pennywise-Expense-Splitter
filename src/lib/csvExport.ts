@@ -57,7 +57,9 @@ export function generateExpensesCSV(options: GenerateCSVOptions): string {
 
   // Section 1: Expenses
   lines.push('EXPENSES');
-  lines.push(['Description', `Amount (${currency})`, 'Paid By', 'Split With'].map(escapeCSVCell).join(','));
+  lines.push(
+    ['Description', `Amount (${currency})`, 'Paid By', 'Split With'].map(escapeCSVCell).join(',')
+  );
 
   for (const exp of expenses) {
     const desc = exp.description;
@@ -72,7 +74,9 @@ export function generateExpensesCSV(options: GenerateCSVOptions): string {
 
   // Section 2: Settlements
   lines.push('SETTLEMENTS');
-  lines.push(['From (Debtor)', 'To (Creditor)', `Amount (${currency})`].map(escapeCSVCell).join(','));
+  lines.push(
+    ['From (Debtor)', 'To (Creditor)', `Amount (${currency})`].map(escapeCSVCell).join(',')
+  );
 
   for (const s of settlements) {
     const fromName = getPersonName(s.from);

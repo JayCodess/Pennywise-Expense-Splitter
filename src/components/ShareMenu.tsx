@@ -23,7 +23,12 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
   const { showToast } = useToast();
 
   const menuRef = useRef<HTMLDivElement>(null);
-  const [coords, setCoords] = useState<{ top: number; left: number; width: number; flipUp: boolean }>({
+  const [coords, setCoords] = useState<{
+    top: number;
+    left: number;
+    width: number;
+    flipUp: boolean;
+  }>({
     top: 0,
     left: 0,
     width: 260,
@@ -105,7 +110,9 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
       }
 
       if (!menuRef.current) return;
-      const items = Array.from(menuRef.current.querySelectorAll<HTMLButtonElement>('button:not([disabled])'));
+      const items = Array.from(
+        menuRef.current.querySelectorAll<HTMLButtonElement>('button:not([disabled])')
+      );
       if (items.length === 0) return;
 
       const activeIndex = items.indexOf(document.activeElement as HTMLButtonElement);
@@ -180,15 +187,17 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
   const handleNativeShare = () => {
     // Calling navigator.share directly synchronously to retain user activation
     if (navigator.share) {
-      navigator.share({
-        title: 'Pennywise: expense summary',
-        text: summary,
-      }).catch((err) => {
-        // AbortError is user cancellation - silent no-op
-        if (err.name !== 'AbortError') {
-          showToast("Couldn't open system share", '⚠️');
-        }
-      });
+      navigator
+        .share({
+          title: 'Pennywise: expense summary',
+          text: summary,
+        })
+        .catch((err) => {
+          // AbortError is user cancellation - silent no-op
+          if (err.name !== 'AbortError') {
+            showToast("Couldn't open system share", '⚠️');
+          }
+        });
       onClose();
       buttonRef.current?.focus();
     }
@@ -298,8 +307,18 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
           onClick={handleNativeShare}
           className="w-full min-h-[44px] px-3 py-2 rounded-xl text-left flex items-center gap-3 hover:bg-background/80 hover:text-accent-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
         >
-          <svg className="w-5 h-5 text-accent-text shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          <svg
+            className="w-5 h-5 text-accent-text shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+            />
           </svg>
           <span className="font-medium">Share…</span>
         </button>
@@ -338,8 +357,18 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
         onClick={() => handleOpenApp(smsUrl, 'SMS', false)}
         className="w-full min-h-[44px] px-3 py-2 rounded-xl text-left flex items-center gap-3 hover:bg-background/80 hover:text-accent-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
       >
-        <svg className="w-5 h-5 text-amber-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        <svg
+          className="w-5 h-5 text-amber-500 shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+          />
         </svg>
         <span>SMS message</span>
       </button>
@@ -351,8 +380,18 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
         onClick={() => handleOpenApp(mailtoUrl, 'Email', false)}
         className="w-full min-h-[44px] px-3 py-2 rounded-xl text-left flex items-center gap-3 hover:bg-background/80 hover:text-accent-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
       >
-        <svg className="w-5 h-5 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        <svg
+          className="w-5 h-5 text-indigo-400 shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+          />
         </svg>
         <span>Email</span>
       </button>
@@ -366,8 +405,18 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
         onClick={handleCopyText}
         className="w-full min-h-[44px] px-3 py-2 rounded-xl text-left flex items-center gap-3 hover:bg-background/80 hover:text-accent-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
       >
-        <svg className="w-5 h-5 text-text-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        <svg
+          className="w-5 h-5 text-text-muted shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+          />
         </svg>
         <span>Copy text summary</span>
       </button>
@@ -382,8 +431,18 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
         }}
         className="w-full min-h-[44px] px-3 py-2 rounded-xl text-left flex items-center gap-3 hover:bg-background/80 hover:text-accent-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
       >
-        <svg className="w-5 h-5 text-rose-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        <svg
+          className="w-5 h-5 text-rose-500 shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
         </svg>
         <span>Image card (PNG)</span>
       </button>
@@ -396,12 +455,24 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
         className="w-full min-h-[44px] px-3 py-2 rounded-xl text-left flex items-center justify-between hover:bg-background/80 hover:text-accent-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-text group"
       >
         <div className="flex items-center gap-3 min-w-0">
-          <svg className="w-5 h-5 text-purple-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          <svg
+            className="w-5 h-5 text-purple-400 shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+            />
           </svg>
           <div className="flex flex-col">
             <span>Copy shareable link</span>
-            <span className="text-[11px] text-text-muted">Anyone with the link can see the names and amounts.</span>
+            <span className="text-[11px] text-text-muted">
+              Anyone with the link can see the names and amounts.
+            </span>
           </div>
         </div>
       </button>
@@ -413,8 +484,18 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
         onClick={handleDownloadCsv}
         className="w-full min-h-[44px] px-3 py-2 rounded-xl text-left flex items-center gap-3 hover:bg-background/80 hover:text-accent-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
       >
-        <svg className="w-5 h-5 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        <svg
+          className="w-5 h-5 text-emerald-400 shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
         </svg>
         <span>Download CSV</span>
       </button>

@@ -53,7 +53,8 @@ describe('Step 5 Edge Cases & Accessibility Tests', () => {
     const amountInput = screen.getByPlaceholderText('0.00');
     const addExpenseBtn = screen.getByRole('button', { name: 'Add expense' });
 
-    const veryLongDesc = 'Super Deluxe VIP Carnival Night Pass with Mystery Spooky Maze Tour and Unlimited Popcorn';
+    const veryLongDesc =
+      'Super Deluxe VIP Carnival Night Pass with Mystery Spooky Maze Tour and Unlimited Popcorn';
     fireEvent.change(descInput, { target: { value: veryLongDesc } });
     fireEvent.change(amountInput, { target: { value: '150.00' } });
     await user.click(addExpenseBtn);

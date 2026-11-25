@@ -1,12 +1,13 @@
 # Pennywise 🎈
 
-> *"Everyone pays in the end."*
+> _"Everyone pays in the end."_
 
 A creepy-carnival expense splitter web app where a group enters who paid for what and instantly sees the fewest payments needed to settle up. Fast, obvious, zero-backend, and fully persistent in client `localStorage`.
 
 ---
 
 ## Features
+
 - **Optimal Settlement Calculation**:
   - Implements a greedy minimum-cash-flow algorithm (matching the largest debtor with the largest creditor).
   - Guarantees at most $N-1$ payments for $N$ people.
@@ -21,7 +22,7 @@ A creepy-carnival expense splitter web app where a group enters who paid for wha
   - Deleting an expense triggers a polite, floating toast allowing instant single-level restoration.
   - **Undo Limitation**: Undo state is strictly single-level and session-only; it is not saved to persistent storage and is reset upon browser refresh.
 - **Data Privacy Note**:
-  - *"Your data stays in your browser. Down in the drain, where nobody can find it."*
+  - _"Your data stays in your browser. Down in the drain, where nobody can find it."_
   - No database, no user accounts, no tracking cookies, no analytics, and zero external network calls.
 - **Accessibility & Mobile-First**:
   - WCAG AA contrast compliance across both dark and light modes.
@@ -30,7 +31,7 @@ A creepy-carnival expense splitter web app where a group enters who paid for wha
   - All animations stop cleanly when `prefers-reduced-motion` is active.
 - **Responsive Layout**:
   - Desktop ($\ge 1024\text{px}$): Two columns with an internally scrolling, sticky results panel.
-  - Mobile (down to 360px): Single-column layout with a floating *"See who pays whom ↓"* pill when results are off-screen.
+  - Mobile (down to 360px): Single-column layout with a floating _"See who pays whom ↓"_ pill when results are off-screen.
 - **15 Supported Currencies**:
   - USD, EUR, GBP, INR, CHF, CAD, AUD, NZD, SEK, NOK, DKK, PLN, CZK, TRY, ZAR.
   - Handles thousands separators (US `1,234.50` and European `1.234,50`). Switching currency reformats immediately without converting values.
@@ -40,10 +41,12 @@ A creepy-carnival expense splitter web app where a group enters who paid for wha
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v18 or higher recommended)
 - npm
 
 ### Installation
+
 ```bash
 npm install
 ```
@@ -51,6 +54,7 @@ npm install
 ### Sharing
 
 Pennywise offers multiple sharing options without any server accounts or tracking:
+
 - **Instant Social & Messaging**: Quick links to share summaries via WhatsApp, Telegram, SMS, or Email.
 - **Native Web Share**: Share formatted text directly into native mobile share sheets (`navigator.share`).
 - **Receipt Image Card (PNG)**: Generate a high-resolution 1080×1350 card designed for mobile stories and chat apps using pure client-side HTML5 Canvas. Includes themed styling for both dark and light modes, mascot artwork, up to 8 settlement rows with overflow indication, and a receipts breakdown section.
@@ -59,28 +63,37 @@ Pennywise offers multiple sharing options without any server accounts or trackin
 - **Copy Text**: Quick one-click formatted breakdown for easy pasting.
 
 ### Running Locally (Development)
+
 ```bash
 npm run dev
 ```
+
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ### Running Tests
+
 Execute the full Vitest suite (49 unit and integration tests):
+
 ```bash
 npm test
 ```
 
 ### Production Build
+
 Build optimized static assets into `dist/`:
+
 ```bash
 npm run build
 ```
 
 ### Preview Production Build
+
 Locally preview the built production app:
+
 ```bash
 npm run preview
 ```
 
 ### Deploying to a Custom Domain
+
 The production URL for canonical and Open Graph (`og:image`, `og:url`, `twitter:image`) metadata is defined in one place in `vite.config.ts` (`DEFAULT_SITE_URL`). To deploy to a custom domain, either update `DEFAULT_SITE_URL` in `vite.config.ts` or set the `VITE_SITE_URL` environment variable before running `npm run build`.

@@ -1,5 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
-import { truncateText, getImageFileName, formatSubtitleDate, renderReceiptCardBlob } from './imageCard';
+import {
+  truncateText,
+  getImageFileName,
+  formatSubtitleDate,
+  renderReceiptCardBlob,
+} from './imageCard';
 import { Person, Settlement, Expense } from './types';
 
 describe('imageCard - pure helpers', () => {
@@ -71,7 +76,13 @@ describe('imageCard - renderReceiptCardBlob', () => {
       { from: '3', to: '1', amountMinor: 7200 },
     ];
     const expenses: Expense[] = [
-      { id: 'e1', description: 'Fair Tickets', amountMinor: 15000, paidBy: '1', participants: ['1', '2', '3'] },
+      {
+        id: 'e1',
+        description: 'Fair Tickets',
+        amountMinor: 15000,
+        paidBy: '1',
+        participants: ['1', '2', '3'],
+      },
     ];
 
     const blob = await renderReceiptCardBlob({

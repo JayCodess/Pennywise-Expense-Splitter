@@ -5,10 +5,7 @@ interface BalloonProps {
   size?: number;
 }
 
-export const Balloon: React.FC<BalloonProps> = ({
-  className = '',
-  size = 48,
-}) => {
+export const Balloon: React.FC<BalloonProps> = ({ className = '', size = 48 }) => {
   return (
     <svg
       role="img"

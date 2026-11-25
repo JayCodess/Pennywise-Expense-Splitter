@@ -194,12 +194,48 @@ describe('Settlement and Balance Calculations', () => {
 
     // Chained cycle of expenses: P1 pays for P2, P2 pays for P3, etc.
     const expenses: Expense[] = [
-      { id: 'e1', description: 'Item 1', amountMinor: 7000, paidBy: 'p1', participants: ['p2', 'p3'] },
-      { id: 'e2', description: 'Item 2', amountMinor: 5000, paidBy: 'p2', participants: ['p3', 'p4', 'p5'] },
-      { id: 'e3', description: 'Item 3', amountMinor: 9500, paidBy: 'p3', participants: ['p1', 'p6', 'p7'] },
-      { id: 'e4', description: 'Item 4', amountMinor: 4200, paidBy: 'p4', participants: ['p5', 'p6'] },
-      { id: 'e5', description: 'Item 5', amountMinor: 6300, paidBy: 'p5', participants: ['p1', 'p2', 'p7'] },
-      { id: 'e6', description: 'Item 6', amountMinor: 8100, paidBy: 'p6', participants: ['p2', 'p4'] },
+      {
+        id: 'e1',
+        description: 'Item 1',
+        amountMinor: 7000,
+        paidBy: 'p1',
+        participants: ['p2', 'p3'],
+      },
+      {
+        id: 'e2',
+        description: 'Item 2',
+        amountMinor: 5000,
+        paidBy: 'p2',
+        participants: ['p3', 'p4', 'p5'],
+      },
+      {
+        id: 'e3',
+        description: 'Item 3',
+        amountMinor: 9500,
+        paidBy: 'p3',
+        participants: ['p1', 'p6', 'p7'],
+      },
+      {
+        id: 'e4',
+        description: 'Item 4',
+        amountMinor: 4200,
+        paidBy: 'p4',
+        participants: ['p5', 'p6'],
+      },
+      {
+        id: 'e5',
+        description: 'Item 5',
+        amountMinor: 6300,
+        paidBy: 'p5',
+        participants: ['p1', 'p2', 'p7'],
+      },
+      {
+        id: 'e6',
+        description: 'Item 6',
+        amountMinor: 8100,
+        paidBy: 'p6',
+        participants: ['p2', 'p4'],
+      },
     ];
 
     const balances = computeBalances(people, expenses);

@@ -108,7 +108,12 @@ export const ClownMascot: React.FC<ClownMascotProps> = ({
       {/* Ruffled accordion collar with deep shadows */}
       <g className="clown-collar" fill="#ded4c3" stroke="#2a2226" strokeWidth="1.4">
         <path d="M 24 108 Q 36 90 46 105 Q 60 88 74 105 Q 84 90 96 108 Q 60 122 24 108 Z" />
-        <path d="M 34 104 Q 46 92 60 101 Q 74 92 86 104" fill="none" stroke="#685c54" strokeWidth="1" />
+        <path
+          d="M 34 104 Q 46 92 60 101 Q 74 92 86 104"
+          fill="none"
+          stroke="#685c54"
+          strokeWidth="1"
+        />
       </g>
 
       {/* Wild, unruly tufts of matted red circus hair */}
@@ -155,14 +160,43 @@ export const ClownMascot: React.FC<ClownMascotProps> = ({
       {/* Asymmetrical eyes — left eye wide & unblinking, right eye narrower & squinting */}
       <g className="clown-eyes" filter="url(#eyeGlowFilter)">
         {/* Left eye: larger, rounder, fixed manic stare */}
-        <ellipse cx="45" cy="50" rx="5.2" ry="4.2" fill="url(#eyeGlowGrad)" stroke="#1a1402" strokeWidth="0.8" />
+        <ellipse
+          cx="45"
+          cy="50"
+          rx="5.2"
+          ry="4.2"
+          fill="url(#eyeGlowGrad)"
+          stroke="#1a1402"
+          strokeWidth="0.8"
+        />
         <circle cx={45 + pupilOffset.x} cy={50 + pupilOffset.y} r="1.6" fill="#140d02" />
-        <circle cx={43.8 + pupilOffset.x * 0.8} cy={48.8 + pupilOffset.y * 0.8} r="0.6" fill="#ffffff" opacity="0.9" />
+        <circle
+          cx={43.8 + pupilOffset.x * 0.8}
+          cy={48.8 + pupilOffset.y * 0.8}
+          r="0.6"
+          fill="#ffffff"
+          opacity="0.9"
+        />
 
         {/* Right eye: slightly smaller, narrowed, subtly angled squint */}
-        <ellipse cx="75" cy="49.5" rx="3.8" ry="2.8" transform="rotate(-6 75 49.5)" fill="url(#eyeGlowGrad)" stroke="#1a1402" strokeWidth="0.8" />
+        <ellipse
+          cx="75"
+          cy="49.5"
+          rx="3.8"
+          ry="2.8"
+          transform="rotate(-6 75 49.5)"
+          fill="url(#eyeGlowGrad)"
+          stroke="#1a1402"
+          strokeWidth="0.8"
+        />
         <circle cx={75 + pupilOffset.x} cy={49.5 + pupilOffset.y} r="1.1" fill="#140d02" />
-        <circle cx={74.2 + pupilOffset.x * 0.8} cy={48.8 + pupilOffset.y * 0.8} r="0.4" fill="#ffffff" opacity="0.8" />
+        <circle
+          cx={74.2 + pupilOffset.x * 0.8}
+          cy={48.8 + pupilOffset.y * 0.8}
+          r="0.4"
+          fill="#ffffff"
+          opacity="0.8"
+        />
       </g>
 
       {/* Bulbous red clown nose */}
@@ -212,8 +246,20 @@ export const ClownMascot: React.FC<ClownMascotProps> = ({
         </g>
 
         {/* Grotesque upward grin extensions carving deep into the cheeks */}
-        <path d="M 28 65 Q 24 58 22 55" fill="none" stroke="#940b13" strokeWidth="1.6" strokeLinecap="round" />
-        <path d="M 92 65 Q 96 58 98 55" fill="none" stroke="#940b13" strokeWidth="1.6" strokeLinecap="round" />
+        <path
+          d="M 28 65 Q 24 58 22 55"
+          fill="none"
+          stroke="#940b13"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 92 65 Q 96 58 98 55"
+          fill="none"
+          stroke="#940b13"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
 
         {/* Thin glossy blood trickle from corner of grin */}
         <path

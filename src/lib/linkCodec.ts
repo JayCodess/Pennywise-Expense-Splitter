@@ -266,7 +266,8 @@ export async function decodeShareableHash(hash: string): Promise<DecodeHashResul
       return {
         success: false,
         error: 'INVALID_DATA',
-        message: 'The shared link contains invalid trip data or exceeds participant/expense limits.',
+        message:
+          'The shared link contains invalid trip data or exceeds participant/expense limits.',
       };
     }
     return {

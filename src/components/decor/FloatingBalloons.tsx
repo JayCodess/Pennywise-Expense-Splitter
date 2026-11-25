@@ -22,12 +22,14 @@ const BalloonShape: React.FC<SingleBalloonProps> = ({
       className={`absolute select-none pointer-events-none transition-transform ${blur ? 'filter blur-[1px]' : ''} ${className}`}
       style={{ width: size, height: size * 1.5, opacity }}
     >
-      <svg
-        viewBox="0 0 50 75"
-        className="w-full h-full overflow-visible drop-shadow-sm"
-      >
+      <svg viewBox="0 0 50 75" className="w-full h-full overflow-visible drop-shadow-sm">
         <defs>
-          <radialGradient id={`balloon-grad-${size}-${color.replace('#', '')}`} cx="35%" cy="30%" r="65%">
+          <radialGradient
+            id={`balloon-grad-${size}-${color.replace('#', '')}`}
+            cx="35%"
+            cy="30%"
+            r="65%"
+          >
             <stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
             <stop offset="30%" stopColor={color} />
             <stop offset="100%" stopColor="#250306" />

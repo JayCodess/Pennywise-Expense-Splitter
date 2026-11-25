@@ -6,15 +6,9 @@ interface CardBalloonProps {
 
 export const CardBalloon: React.FC<CardBalloonProps> = ({ className = '' }) => {
   return (
-    <div
-      aria-hidden="true"
-      className={`absolute select-none pointer-events-none z-0 ${className}`}
-    >
+    <div aria-hidden="true" className={`absolute select-none pointer-events-none z-0 ${className}`}>
       <div className="animate-bob [animation-duration:5s] relative -top-7 -right-2">
-        <svg
-          viewBox="0 0 40 90"
-          className="w-8 h-20 overflow-visible drop-shadow-sm"
-        >
+        <svg viewBox="0 0 40 90" className="w-8 h-20 overflow-visible drop-shadow-sm">
           <defs>
             <radialGradient id="cardBalloonGrad" cx="35%" cy="30%" r="65%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />

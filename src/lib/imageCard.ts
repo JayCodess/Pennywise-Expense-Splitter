@@ -236,11 +236,7 @@ async function ensureFontsLoaded(): Promise<void> {
 /**
  * Procedural realistic blood drips generator along an edge (with neck, teardrop bulb, and highlights)
  */
-function drawRealisticBloodDrips(
-  ctx: CanvasRenderingContext2D,
-  width: number,
-  isDark: boolean
-) {
+function drawRealisticBloodDrips(ctx: CanvasRenderingContext2D, width: number, isDark: boolean) {
   ctx.save();
 
   // Shadow for blood
@@ -286,14 +282,7 @@ function drawRealisticBloodDrips(
     ctx.lineTo(rightX + 10, baseLipH);
     ctx.quadraticCurveTo(rightX, baseLipH + 1, d.x + d.w / 2, baseLipH + 8);
     // Narrow stem into teardrop bulb
-    ctx.bezierCurveTo(
-      d.x + d.w * 0.4,
-      bulbY - d.r * 0.6,
-      d.x + d.r,
-      bulbY - 1,
-      d.x,
-      d.len
-    );
+    ctx.bezierCurveTo(d.x + d.w * 0.4, bulbY - d.r * 0.6, d.x + d.r, bulbY - 1, d.x, d.len);
     ctx.bezierCurveTo(
       d.x - d.r,
       bulbY - 1,
@@ -331,7 +320,15 @@ function drawRealisticBloodDrips(
       // Bulb oval highlight
       ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
       ctx.beginPath();
-      ctx.ellipse(d.x - d.r * 0.25, d.len - d.r * 0.7, d.r * 0.28, d.r * 0.45, -0.3, 0, Math.PI * 2);
+      ctx.ellipse(
+        d.x - d.r * 0.25,
+        d.len - d.r * 0.7,
+        d.r * 0.28,
+        d.r * 0.45,
+        -0.3,
+        0,
+        Math.PI * 2
+      );
       ctx.fill();
     }
   }
@@ -623,7 +620,7 @@ export async function renderReceiptCardBlob(options: ImageCardOptions): Promise<
 
   // 7. Receipts Breakdown Section (when space allows, up to 5 expenses)
   const footerAreaHeight = 140;
-  const remainingSpace = (cardY + cardH - footerAreaHeight) - currentY;
+  const remainingSpace = cardY + cardH - footerAreaHeight - currentY;
 
   // Space check: requires at least 150px of vertical headroom
   if (remainingSpace >= 150 && expenses.length > 0) {
@@ -643,7 +640,10 @@ export async function renderReceiptCardBlob(options: ImageCardOptions): Promise<
     currentY += 28;
 
     const maxReceipts = Math.min(expenses.length, 5);
-    const receiptRowH = Math.min(46, (cardY + cardH - footerAreaHeight - currentY - 30) / maxReceipts);
+    const receiptRowH = Math.min(
+      46,
+      (cardY + cardH - footerAreaHeight - currentY - 30) / maxReceipts
+    );
 
     for (let j = 0; j < maxReceipts; j++) {
       const exp = expenses[j];
@@ -682,7 +682,11 @@ export async function renderReceiptCardBlob(options: ImageCardOptions): Promise<
       ctx.textAlign = 'center';
       ctx.font = '500 18px "Inter", system-ui, -apple-system, sans-serif';
       ctx.fillStyle = textMuted;
-      ctx.fillText(`+${moreExpenses} more expenses`, width / 2, currentY + maxReceipts * receiptRowH + 6);
+      ctx.fillText(
+        `+${moreExpenses} more expenses`,
+        width / 2,
+        currentY + maxReceipts * receiptRowH + 6
+      );
     }
   }
 

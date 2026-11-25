@@ -33,7 +33,9 @@ describe('Shareable Link & Safe Hash Import Tests', () => {
     await user.click(shareBtn);
 
     // Verify Copy Link item has privacy warning hint
-    expect(screen.getByText('Anyone with the link can see the names and amounts.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Anyone with the link can see the names and amounts.')
+    ).toBeInTheDocument();
 
     const copyLinkBtn = screen.getByRole('menuitem', { name: /copy shareable link/i });
     await user.click(copyLinkBtn);

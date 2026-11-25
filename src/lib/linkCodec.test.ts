@@ -214,13 +214,17 @@ describe('linkCodec - encode and decode shareable link', () => {
       expenses: [],
       currency: 'USD',
     };
-    const hashLongName = 'd=1.u' + toBase64Url(new TextEncoder().encode(JSON.stringify(longNamePayload)));
+    const hashLongName =
+      'd=1.u' + toBase64Url(new TextEncoder().encode(JSON.stringify(longNamePayload)));
     const decodedLongName = await decodeShareableHash(hashLongName);
     expect(decodedLongName.success).toBe(false);
 
     // Description > 120 chars
     const longDescPayload = {
-      people: [{ id: 'p1', name: 'Anna' }, { id: 'p2', name: 'Ben' }],
+      people: [
+        { id: 'p1', name: 'Anna' },
+        { id: 'p2', name: 'Ben' },
+      ],
       expenses: [
         {
           id: 'e1',
@@ -232,7 +236,8 @@ describe('linkCodec - encode and decode shareable link', () => {
       ],
       currency: 'USD',
     };
-    const hashLongDesc = 'd=1.u' + toBase64Url(new TextEncoder().encode(JSON.stringify(longDescPayload)));
+    const hashLongDesc =
+      'd=1.u' + toBase64Url(new TextEncoder().encode(JSON.stringify(longDescPayload)));
     const decodedLongDesc = await decodeShareableHash(hashLongDesc);
     expect(decodedLongDesc.success).toBe(false);
   });
