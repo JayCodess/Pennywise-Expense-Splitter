@@ -104,7 +104,7 @@ export function buildSocialShareUrls(summaryText: string, origin?: string) {
   const smsUrl = `sms:${smsSeparator}body=${encodedText}`;
 
   // Email: mailto
-  const subject = encodeURIComponent('🎈 Pennywise Tab Summary');
+  const subject = encodeURIComponent('Pennywise: expense summary');
   const mailtoUrl = `mailto:?subject=${subject}&body=${encodedText}`;
 
   return {

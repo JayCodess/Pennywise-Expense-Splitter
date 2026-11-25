@@ -35,7 +35,7 @@ describe('Step 5 Edge Cases & Accessibility Tests', () => {
     const nameInput = screen.getByPlaceholderText("Who's joining the carnival?");
     const addBtn = screen.getByRole('button', { name: '+ Add' });
 
-    const veryLongName = 'The Great and Horrifying Ringmaster Bartholomew Montgomery III of the Old Carnival';
+    const veryLongName = 'Ringmaster Bartholomew Montgomery III of Carnival Woods';
     fireEvent.change(nameInput, { target: { value: veryLongName } });
     await user.click(addBtn);
 
@@ -51,7 +51,7 @@ describe('Step 5 Edge Cases & Accessibility Tests', () => {
     // Add an expense with a very long description
     const descInput = screen.getByPlaceholderText('e.g. Carnival tickets, cotton candy');
     const amountInput = screen.getByPlaceholderText('0.00');
-    const addExpenseBtn = screen.getByRole('button', { name: 'Add to the tab' });
+    const addExpenseBtn = screen.getByRole('button', { name: 'Add expense' });
 
     const veryLongDesc = 'Super Deluxe VIP Carnival Night Pass with Mystery Spooky Maze Tour and Unlimited Popcorn';
     fireEvent.change(descInput, { target: { value: veryLongDesc } });
@@ -73,7 +73,7 @@ describe('Step 5 Edge Cases & Accessibility Tests', () => {
 
     const descInput = screen.getByPlaceholderText('e.g. Carnival tickets, cotton candy');
     const amountInput = screen.getByPlaceholderText('0.00');
-    const addExpenseBtn = screen.getByRole('button', { name: 'Add to the tab' });
+    const addExpenseBtn = screen.getByRole('button', { name: 'Add expense' });
 
     // Add a huge expense of 5 million dollars
     fireEvent.change(descInput, { target: { value: 'Haunted Carnival Ground Purchase' } });
@@ -154,5 +154,85 @@ describe('Step 5 Edge Cases & Accessibility Tests', () => {
       const content = parent?.querySelector('.relative.z-10');
       expect(content).toBeInTheDocument();
     });
+  });
+
+  it('sets maxLength on name (60) and description (120) inputs', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const personInput = screen.getByPlaceholderText("Who's joining the carnival?");
+    expect(personInput).toHaveAttribute('maxLength', '60');
+
+    // Load example troupe so add expense form is visible
+    const loadExampleBtn = screen.getByRole('button', { name: /load example troupe/i });
+    await user.click(loadExampleBtn);
+
+    const descInput = screen.getByPlaceholderText('e.g. Carnival tickets, cotton candy');
+    expect(descInput).toHaveAttribute('maxLength', '120');
+  });
+
+  it('enforces 50 people limit in UI with friendly inline message', async () => {
+    const user = userEvent.setup();
+
+    // Populate localStorage with 50 people
+    const people50 = Array.from({ length: 50 }, (_, i) => ({
+      id: `p_${i + 1}`,
+      name: `Troupe Member ${i + 1}`,
+    }));
+    localStorage.setItem(
+      'pennywise_data_v1',
+      JSON.stringify({
+        people: people50,
+        expenses: [],
+        currency: 'USD',
+      })
+    );
+
+    render(<App />);
+
+    const personInput = screen.getByPlaceholderText("Who's joining the carnival?");
+    const addBtn = screen.getByRole('button', { name: '+ Add' });
+
+    await user.type(personInput, 'Extra Member 51');
+    await user.click(addBtn);
+
+    expect(screen.getByText("That's the limit for one trip: 50 people.")).toBeInTheDocument();
+  });
+
+  it('enforces 500 expenses limit in UI with friendly inline message', async () => {
+    const user = userEvent.setup();
+
+    const peopleList = [
+      { id: 'p1', name: 'Anna' },
+      { id: 'p2', name: 'Ben' },
+    ];
+    const expenses500 = Array.from({ length: 500 }, (_, i) => ({
+      id: `e_${i + 1}`,
+      description: `Expense ${i + 1}`,
+      amountMinor: 1000,
+      paidBy: 'p1',
+      participants: ['p1', 'p2'],
+    }));
+
+    localStorage.setItem(
+      'pennywise_data_v1',
+      JSON.stringify({
+        people: peopleList,
+        expenses: expenses500,
+        currency: 'USD',
+      })
+    );
+
+    render(<App />);
+
+    const descInput = screen.getByPlaceholderText('e.g. Carnival tickets, cotton candy');
+    const amountInput = screen.getByPlaceholderText('0.00');
+    const addExpenseBtn = screen.getByRole('button', { name: 'Add expense' });
+
+    await user.type(descInput, 'Expense 501');
+    await user.type(amountInput, '25.00');
+    await user.click(addExpenseBtn);
+
+    expect(screen.getByText("That's the limit for one trip: 500 expenses.")).toBeInTheDocument();
   });
 });

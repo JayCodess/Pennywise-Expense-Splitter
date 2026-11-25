@@ -3,14 +3,14 @@ import { createPortal } from 'react-dom';
 import { useExpenseStore } from '../hooks/useExpenseStore';
 import { useToast } from '../hooks/useToast';
 import { buildTextSummary, buildSocialShareUrls } from '../lib/sharing';
+import { encodeShareableLink } from '../lib/linkCodec';
+import { generateExpensesCSV, getCSVFileName, downloadCSVFile } from '../lib/csvExport';
 
 interface ShareMenuProps {
   buttonRef: React.RefObject<HTMLButtonElement>;
   isOpen: boolean;
   onClose: () => void;
   onOpenImageCard?: () => void;
-  onCopyLink?: () => void;
-  onDownloadCsv?: () => void;
 }
 
 export const ShareMenu: React.FC<ShareMenuProps> = ({
@@ -18,10 +18,8 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
   isOpen,
   onClose,
   onOpenImageCard,
-  onCopyLink,
-  onDownloadCsv,
 }) => {
-  const { people, settlements, totalSpentMinor, currency } = useExpenseStore();
+  const { people, settlements, expenses, totalSpentMinor, currency } = useExpenseStore();
   const { showToast } = useToast();
 
   const menuRef = useRef<HTMLDivElement>(null);
@@ -183,7 +181,7 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
     // Calling navigator.share directly synchronously to retain user activation
     if (navigator.share) {
       navigator.share({
-        title: 'Pennywise Tab Summary',
+        title: 'Pennywise: expense summary',
         text: summary,
       }).catch((err) => {
         // AbortError is user cancellation - silent no-op
@@ -229,6 +227,58 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
       showToast("Copied… they'll see it.", '✓');
     } catch {
       showToast('Could not copy text', '⚠️');
+    }
+    onClose();
+    buttonRef.current?.focus();
+  };
+
+  const handleDownloadCsv = () => {
+    try {
+      const csv = generateExpensesCSV({
+        people,
+        expenses,
+        settlements,
+        currency,
+      });
+      const fileName = getCSVFileName();
+      downloadCSVFile(csv, fileName);
+      showToast('CSV downloaded', '✓');
+    } catch {
+      showToast('Could not download CSV', '⚠️');
+    }
+    onClose();
+    buttonRef.current?.focus();
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      const { url, isLong } = await encodeShareableLink({
+        people,
+        expenses,
+        currency,
+      });
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+
+      if (isLong) {
+        showToast('Link copied (note: very long links may not work in some apps)', '✓', 4500);
+      } else {
+        showToast('Link copied', '✓');
+      }
+    } catch {
+      showToast('Could not copy link', '⚠️');
     }
     onClose();
     buttonRef.current?.focus();
@@ -342,26 +392,25 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({
       <button
         type="button"
         role="menuitem"
-        onClick={() => {
-          onClose();
-          onCopyLink?.();
-        }}
-        className="w-full min-h-[44px] px-3 py-2 rounded-xl text-left flex items-center gap-3 hover:bg-background/80 hover:text-accent-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
+        onClick={handleCopyLink}
+        className="w-full min-h-[44px] px-3 py-2 rounded-xl text-left flex items-center justify-between hover:bg-background/80 hover:text-accent-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-text group"
       >
-        <svg className="w-5 h-5 text-purple-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-        </svg>
-        <span>Copy shareable link</span>
+        <div className="flex items-center gap-3 min-w-0">
+          <svg className="w-5 h-5 text-purple-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          <div className="flex flex-col">
+            <span>Copy shareable link</span>
+            <span className="text-[11px] text-text-muted">Anyone with the link can see the names and amounts.</span>
+          </div>
+        </div>
       </button>
 
       {/* 9. Download CSV */}
       <button
         type="button"
         role="menuitem"
-        onClick={() => {
-          onClose();
-          onDownloadCsv?.();
-        }}
+        onClick={handleDownloadCsv}
         className="w-full min-h-[44px] px-3 py-2 rounded-xl text-left flex items-center gap-3 hover:bg-background/80 hover:text-accent-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
       >
         <svg className="w-5 h-5 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">

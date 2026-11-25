@@ -177,7 +177,7 @@ export const ResultsCard: React.FC = () => {
                       <span className="text-positive-text">{toName}</span>
                     </p>
                     <p className="text-xs text-text-muted mt-0.5">
-                      Direct payment to settle tab
+                      Pays back directly
                     </p>
                   </div>
                   <span className="font-sans font-tabular text-base sm:text-lg font-bold text-negative-text shrink-0 drop-shadow-[0_0_6px_rgba(193,18,31,0.35)]">

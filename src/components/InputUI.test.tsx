@@ -107,7 +107,7 @@ describe('Step 3 Input UI Integration Tests', () => {
 
     const descInput = screen.getByPlaceholderText('e.g. Carnival tickets, cotton candy');
     const amountInput = screen.getByPlaceholderText('0.00');
-    const addExpenseBtn = screen.getByRole('button', { name: 'Add to the tab' });
+    const addExpenseBtn = screen.getByRole('button', { name: 'Add expense' });
 
     // Type invalid amount and blur
     await user.type(amountInput, 'invalid');
@@ -214,7 +214,7 @@ describe('Step 3 Input UI Integration Tests', () => {
     const loadExampleBtn = screen.getByRole('button', { name: /load example troupe/i });
     await user.click(loadExampleBtn);
 
-    // Total tab starts in USD: $474.00
+    // Total expenses start in USD: $474.00
     expect(screen.getByTestId('total-spent')).toHaveTextContent('$474.00');
 
     // Switch currency to EUR

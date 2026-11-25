@@ -149,7 +149,7 @@ export const ImageCardPreviewModal: React.FC<ImageCardPreviewModalProps> = ({
     if (fileToShare && navigator.share) {
       navigator.share({
         files: [fileToShare],
-        title: 'Pennywise Tab Receipt',
+        title: 'Pennywise: expense summary',
       }).then(() => {
         showToast('Image shared', '🎈');
       }).catch((err) => {

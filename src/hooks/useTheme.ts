@@ -35,8 +35,10 @@ export function useTheme() {
 
   // Listen to OS scheme changes if user hasn't explicitly set localStorage
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
     const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
+    if (!mediaQuery || typeof mediaQuery.addEventListener !== 'function') return;
+
     const handleChange = (e: MediaQueryListEvent) => {
       try {
         if (!localStorage.getItem(STORAGE_KEY)) {

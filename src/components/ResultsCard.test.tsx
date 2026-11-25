@@ -91,7 +91,7 @@ describe('Step 4 Results UI Integration Tests', () => {
     expect(screen.getByText('Balance = total paid − own share')).toBeInTheDocument();
   });
 
-  it('shows confirmation when clicking Banish everything and clears the tab when confirmed', async () => {
+  it('shows confirmation when clicking Banish everything and clears expenses when confirmed', async () => {
     const user = userEvent.setup();
     render(<App />);
 

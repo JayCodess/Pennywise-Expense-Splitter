@@ -4,7 +4,7 @@ import { useToast } from '../hooks/useToast';
 
 export const Toast: React.FC = () => {
   const { deletedExpense, restoreExpense } = useExpenseStore();
-  const { toast, hideToast } = useToast();
+  const { toast, showToast, hideToast } = useToast();
 
   const [undoVisible, setUndoVisible] = useState(false);
   const [currentDesc, setCurrentDesc] = useState('');
@@ -53,7 +53,11 @@ export const Toast: React.FC = () => {
   };
 
   const handleUndo = () => {
-    restoreExpense();
+    const success = restoreExpense();
+    if (!success) {
+      showToast("That's the limit for one trip: 500 expenses.", '⚠️');
+      return;
+    }
     setUndoVisible(false);
   };
 

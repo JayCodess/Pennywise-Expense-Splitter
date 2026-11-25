@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useExpenseStore } from '../hooks/useExpenseStore';
 import { Expense } from '../lib/types';
 import { formatMoney, parseAmountToMinor } from '../lib/money';
+import { MAX_DESC_LENGTH } from '../lib/expenseReducer';
 import { StormDrain } from './StormDrain';
 import { CardTopBlood } from './decor/CardTopBlood';
 
@@ -143,7 +144,7 @@ export const ExpensesCard: React.FC = () => {
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
           <h2 id="expenses-section-title" className="font-display text-2xl text-text-base tracking-wide">
-            The Tab
+            Carnival Costs
           </h2>
           <div className="text-right">
             <span className="text-xs text-text-muted block">Total spent</span>
@@ -188,6 +189,7 @@ export const ExpensesCard: React.FC = () => {
                           id={`edit-desc-${exp.id}`}
                           ref={editDescInputRef}
                           type="text"
+                          maxLength={MAX_DESC_LENGTH}
                           value={editDesc}
                           onChange={(e) => setEditDesc(e.target.value)}
                           placeholder="What for?"

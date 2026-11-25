@@ -27,15 +27,22 @@ export const INITIAL_STATE: ExpenseState = {
   deletedExpense: null,
 };
 
+export const MAX_PEOPLE = 50;
+export const MAX_EXPENSES = 500;
+export const MAX_NAME_LENGTH = 60;
+export const MAX_DESC_LENGTH = 120;
+
 /**
- * Validates raw data from localStorage.
+ * Validates raw data from localStorage or shared link payload.
  * Enforces:
+ * - max 50 people, max 500 expenses
+ * - names up to 60 chars, descriptions up to 120 chars
  * - amountMinor is a positive integer
  * - every expense's paidBy exists in people
  * - every participant exists in people, and each expense has at least one participant
  * - no duplicate person IDs or duplicate names (case-insensitive)
  * - currency is one of the supported list, otherwise defaults to USD
- * If anything is invalid, returns null (fall back to empty state).
+ * If anything is invalid, returns null.
  */
 export function validateHydratedState(
   raw: unknown
@@ -44,6 +51,11 @@ export function validateHydratedState(
   const obj = raw as Record<string, unknown>;
 
   if (!Array.isArray(obj.people) || !Array.isArray(obj.expenses)) {
+    return null;
+  }
+
+  // Enforce max counts
+  if (obj.people.length > MAX_PEOPLE || obj.expenses.length > MAX_EXPENSES) {
     return null;
   }
 
@@ -70,6 +82,9 @@ export function validateHydratedState(
     const trimmedId = p.id.trim();
     const trimmedName = p.name.trim();
 
+    // Name length limit
+    if (trimmedName.length > MAX_NAME_LENGTH) return null;
+
     // Reject duplicate ID
     if (personIds.has(trimmedId)) return null;
     // Reject duplicate case-insensitive name
@@ -90,6 +105,10 @@ export function validateHydratedState(
     const exp = item as Record<string, unknown>;
     if (typeof exp.id !== 'string' || !exp.id.trim()) return null;
     if (typeof exp.description !== 'string') return null;
+
+    const trimmedDesc = exp.description.trim();
+    // Description length limit
+    if (trimmedDesc.length > MAX_DESC_LENGTH) return null;
 
     // amountMinor must be a positive integer
     if (
@@ -128,7 +147,7 @@ export function validateHydratedState(
 
     expenses.push({
       id: trimmedId,
-      description: exp.description.trim(),
+      description: trimmedDesc,
       amountMinor: exp.amountMinor,
       paidBy: exp.paidBy,
       participants,
@@ -145,9 +164,10 @@ export function validateHydratedState(
 export function expenseReducer(state: ExpenseState, action: ExpenseAction): ExpenseState {
   switch (action.type) {
     case 'ADD_PERSON': {
+      if (state.people.length >= MAX_PEOPLE) return state;
       const trimmedName = action.payload.name.trim();
       const id = action.payload.id.trim();
-      if (!trimmedName || !id) return state;
+      if (!trimmedName || !id || trimmedName.length > MAX_NAME_LENGTH) return state;
 
       // Check duplicate name (case-insensitive)
       const isDuplicate = state.people.some(
@@ -212,7 +232,10 @@ export function expenseReducer(state: ExpenseState, action: ExpenseAction): Expe
     }
 
     case 'ADD_EXPENSE': {
+      if (state.expenses.length >= MAX_EXPENSES) return state;
       const exp = action.payload;
+      const trimmedDesc = exp.description ? exp.description.trim() : '';
+      if (!trimmedDesc || trimmedDesc.length > MAX_DESC_LENGTH) return state;
       // Validation: amount > 0 and integer
       if (!Number.isInteger(exp.amountMinor) || exp.amountMinor <= 0) return state;
 
@@ -245,6 +268,8 @@ export function expenseReducer(state: ExpenseState, action: ExpenseAction): Expe
 
     case 'UPDATE_EXPENSE': {
       const exp = action.payload;
+      const trimmedDesc = exp.description ? exp.description.trim() : '';
+      if (!trimmedDesc || trimmedDesc.length > MAX_DESC_LENGTH) return state;
       // Must exist in state
       if (!state.expenses.some((e) => e.id === exp.id)) return state;
 
@@ -292,6 +317,7 @@ export function expenseReducer(state: ExpenseState, action: ExpenseAction): Expe
 
     case 'RESTORE_EXPENSE': {
       if (!state.deletedExpense) return state;
+      if (state.expenses.length >= MAX_EXPENSES) return state;
       const toRestore = state.deletedExpense;
 
       // Check if payer still exists in people

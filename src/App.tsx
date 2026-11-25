@@ -9,6 +9,8 @@ import { ResultsCard } from './components/ResultsCard';
 import { ResultsScrollPill } from './components/ResultsScrollPill';
 import { Toast } from './components/Toast';
 import { StormDrain } from './components/StormDrain';
+import { SharedTripBanner } from './components/SharedTripBanner';
+import { decodeShareableHash } from './lib/linkCodec';
 import { BloodDefs } from './components/decor/BloodDefs';
 import { ViewportBloodLip } from './components/decor/ViewportBloodLip';
 import { CornerSplatter } from './components/decor/CornerSplatter';
@@ -19,10 +21,69 @@ import { GutterEyes } from './components/decor/GutterEyes';
 import { ClawScratches } from './components/decor/ClawScratches';
 
 export const AppContent: React.FC = () => {
-  const { people, expenses, settlements } = useExpenseStore();
+  const {
+    people,
+    expenses,
+    settlements,
+    viewModePayload,
+    isViewMode,
+    setViewModePayload,
+    importViewModePayload,
+    exitViewMode,
+  } = useExpenseStore();
   const [grinWiden, setGrinWiden] = useState(false);
+  const [sharedError, setSharedError] = useState<string | null>(null);
   const prevPeopleCount = useRef(people.length);
   const prevExpensesCount = useRef(expenses.length);
+
+  // Parse URL hash for shared trip (#d=...), handling both initial load and hashchange
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const parseHash = async () => {
+      const hash = window.location.hash;
+      if (!hash || !hash.includes('d=')) {
+        return;
+      }
+      const result = await decodeShareableHash(hash);
+      if (result.success) {
+        setSharedError(null);
+        setViewModePayload(result.payload);
+      } else {
+        setViewModePayload(null);
+        setSharedError(result.message);
+      }
+    };
+
+    parseHash();
+    window.addEventListener('hashchange', parseHash);
+    return () => {
+      window.removeEventListener('hashchange', parseHash);
+    };
+  }, [setViewModePayload]);
+
+  const clearHash = () => {
+    if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  };
+
+  const handleImport = () => {
+    if (viewModePayload) {
+      importViewModePayload(viewModePayload);
+      clearHash();
+    }
+  };
+
+  const handleExit = () => {
+    exitViewMode();
+    clearHash();
+  };
+
+  const handleDismissError = () => {
+    setSharedError(null);
+    clearHash();
+  };
 
   // Briefly widen clown's grin when a person or expense is added
   useEffect(() => {
@@ -58,9 +119,19 @@ export const AppContent: React.FC = () => {
 
         {/* Responsive Grid: Single column on mobile, 2 columns on desktop (>=1024px) */}
         <main className="w-full max-w-xl lg:max-w-5xl mx-auto mt-4">
+          {(viewModePayload || sharedError) && (
+            <SharedTripBanner
+              payload={viewModePayload}
+              errorMessage={sharedError}
+              onImport={handleImport}
+              onExit={handleExit}
+              onDismissError={handleDismissError}
+            />
+          )}
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start">
-            {/* Left Column: Inputs (People -> Add expense -> Expenses) with 32-40px gap */}
-            <div className="lg:col-span-7 space-y-8 sm:space-y-10">
+            {/* Left Column: Inputs (read-only / inert when viewing shared trip) */}
+            <div className={`lg:col-span-7 space-y-8 sm:space-y-10 ${isViewMode ? 'opacity-40 pointer-events-none select-none filter blur-[0.5px]' : ''}`}>
               <PeopleCard />
               <AddExpenseCard />
               <ExpensesCard />

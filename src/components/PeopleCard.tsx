@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useExpenseStore } from '../hooks/useExpenseStore';
+import { MAX_PEOPLE, MAX_NAME_LENGTH } from '../lib/expenseReducer';
 import { StormDrain } from './StormDrain';
 import { CardTopBlood } from './decor/CardTopBlood';
 
@@ -41,6 +42,18 @@ export const PeopleCard: React.FC = () => {
       return;
     }
 
+    if (people.length >= MAX_PEOPLE) {
+      setError("That's the limit for one trip: 50 people.");
+      inputRef.current?.focus();
+      return;
+    }
+
+    if (trimmed.length > MAX_NAME_LENGTH) {
+      setError("Names cannot exceed 60 characters.");
+      inputRef.current?.focus();
+      return;
+    }
+
     const isDuplicate = people.some(
       (p) => p.name.trim().toLowerCase() === trimmed.toLowerCase()
     );
@@ -50,7 +63,15 @@ export const PeopleCard: React.FC = () => {
       return;
     }
 
-    addPerson(trimmed);
+    const newId = addPerson(trimmed);
+    if (!newId) {
+      if (people.length >= MAX_PEOPLE) {
+        setError("That's the limit for one trip: 50 people.");
+      }
+      inputRef.current?.focus();
+      return;
+    }
+
     setNameInput('');
     setError(null);
     inputRef.current?.focus();
@@ -115,6 +136,7 @@ export const PeopleCard: React.FC = () => {
               id="person-name-input"
               ref={inputRef}
               type="text"
+              maxLength={MAX_NAME_LENGTH}
               autoFocus
               value={nameInput}
               onChange={(e) => {

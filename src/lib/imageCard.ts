@@ -678,7 +678,7 @@ export async function renderReceiptCardBlob(options: ImageCardOptions): Promise<
       ctx.textAlign = 'center';
       ctx.font = '500 18px "Inter", system-ui, -apple-system, sans-serif';
       ctx.fillStyle = textMuted;
-      ctx.fillText(`+${moreExpenses} more expenses on tab`, width / 2, currentY + maxReceipts * receiptRowH + 6);
+      ctx.fillText(`+${moreExpenses} more expenses`, width / 2, currentY + maxReceipts * receiptRowH + 6);
     }
   }
 

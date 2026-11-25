@@ -4,6 +4,10 @@ import {
   INITIAL_STATE,
   validateHydratedState,
   ExpenseState,
+  MAX_PEOPLE,
+  MAX_EXPENSES,
+  MAX_NAME_LENGTH,
+  MAX_DESC_LENGTH,
 } from '../lib/expenseReducer';
 import { Expense } from '../lib/types';
 import { computeSettlements } from '../lib/settle';
@@ -491,6 +495,156 @@ describe('expenseReducer and Store State', () => {
       expect(result?.currency).toBe('EUR');
       expect(result?.people).toHaveLength(2);
       expect(result?.expenses).toHaveLength(1);
+    });
+
+    it('enforces limit: 51st person is rejected in reducer', () => {
+      let state = INITIAL_STATE;
+      for (let i = 1; i <= MAX_PEOPLE; i++) {
+        state = expenseReducer(state, {
+          type: 'ADD_PERSON',
+          payload: { id: `p_${i}`, name: `Person ${i}` },
+        });
+      }
+      expect(state.people).toHaveLength(MAX_PEOPLE);
+
+      // Attempt 51st person
+      const state51 = expenseReducer(state, {
+        type: 'ADD_PERSON',
+        payload: { id: 'p_51', name: 'Person 51' },
+      });
+      expect(state51.people).toHaveLength(MAX_PEOPLE);
+    });
+
+    it('enforces limit: 501st expense is rejected in reducer and restoreExpense', () => {
+      let state = INITIAL_STATE;
+      state = expenseReducer(state, {
+        type: 'ADD_PERSON',
+        payload: { id: 'p1', name: 'Anna' },
+      });
+      state = expenseReducer(state, {
+        type: 'ADD_PERSON',
+        payload: { id: 'p2', name: 'Ben' },
+      });
+
+      for (let i = 1; i <= MAX_EXPENSES; i++) {
+        state = expenseReducer(state, {
+          type: 'ADD_EXPENSE',
+          payload: {
+            id: `e_${i}`,
+            description: `Expense ${i}`,
+            amountMinor: 1000,
+            paidBy: 'p1',
+            participants: ['p1', 'p2'],
+          },
+        });
+      }
+      expect(state.expenses).toHaveLength(MAX_EXPENSES);
+
+      // Attempt 501st expense
+      const state501 = expenseReducer(state, {
+        type: 'ADD_EXPENSE',
+        payload: {
+          id: 'e_501',
+          description: 'Expense 501',
+          amountMinor: 1000,
+          paidBy: 'p1',
+          participants: ['p1', 'p2'],
+        },
+      });
+      expect(state501.expenses).toHaveLength(MAX_EXPENSES);
+
+      // restoreExpense also rejected when at limit
+      const stateWithDeleted: ExpenseState = {
+        ...state,
+        deletedExpense: {
+          id: 'e_del',
+          description: 'Del',
+          amountMinor: 500,
+          paidBy: 'p1',
+          participants: ['p1'],
+        },
+      };
+      const restoredState = expenseReducer(stateWithDeleted, { type: 'RESTORE_EXPENSE' });
+      expect(restoredState.expenses).toHaveLength(MAX_EXPENSES);
+    });
+
+    it('enforces limit: 61-character name and 121-character description are rejected', () => {
+      // 61-char name
+      const name61 = 'A'.repeat(61);
+      const state1 = expenseReducer(INITIAL_STATE, {
+        type: 'ADD_PERSON',
+        payload: { id: 'p1', name: name61 },
+      });
+      expect(state1.people).toHaveLength(0);
+
+      // 60-char name is accepted
+      const name60 = 'A'.repeat(60);
+      const state2 = expenseReducer(INITIAL_STATE, {
+        type: 'ADD_PERSON',
+        payload: { id: 'p1', name: name60 },
+      });
+      expect(state2.people).toHaveLength(1);
+
+      // 121-char description
+      const desc121 = 'B'.repeat(121);
+      const state3 = expenseReducer(state2, {
+        type: 'ADD_EXPENSE',
+        payload: {
+          id: 'e1',
+          description: desc121,
+          amountMinor: 100,
+          paidBy: 'p1',
+          participants: ['p1'],
+        },
+      });
+      expect(state3.expenses).toHaveLength(0);
+
+      // 120-char description is accepted
+      const desc120 = 'B'.repeat(120);
+      const state4 = expenseReducer(state2, {
+        type: 'ADD_EXPENSE',
+        payload: {
+          id: 'e1',
+          description: desc120,
+          amountMinor: 100,
+          paidBy: 'p1',
+          participants: ['p1'],
+        },
+      });
+      expect(state4.expenses).toHaveLength(1);
+    });
+
+    it('state at exactly the limits (50 people, 500 expenses, 60-char name, 120-char desc) survives a save and reload round trip', () => {
+      const maxPeopleList = Array.from({ length: MAX_PEOPLE }, (_, i) => ({
+        id: `p_${i + 1}`,
+        name: i === 0 ? 'X'.repeat(MAX_NAME_LENGTH) : `Person ${i + 1}`,
+      }));
+
+      const maxExpensesList = Array.from({ length: MAX_EXPENSES }, (_, i) => ({
+        id: `e_${i + 1}`,
+        description: i === 0 ? 'Y'.repeat(MAX_DESC_LENGTH) : `Expense ${i + 1}`,
+        amountMinor: 1000 + i,
+        paidBy: 'p_1',
+        participants: ['p_1', 'p_2'],
+      }));
+
+      const fullState = {
+        people: maxPeopleList,
+        expenses: maxExpensesList,
+        currency: 'USD',
+      };
+
+      // Simulate JSON save
+      const serialized = JSON.stringify(fullState);
+      const parsed = JSON.parse(serialized);
+
+      // Validate reload via validateHydratedState
+      const reloaded = validateHydratedState(parsed);
+      expect(reloaded).not.toBeNull();
+      expect(reloaded?.people).toHaveLength(50);
+      expect(reloaded?.expenses).toHaveLength(500);
+      expect(reloaded?.people[0].name).toBe('X'.repeat(60));
+      expect(reloaded?.expenses[0].description).toBe('Y'.repeat(120));
     });
   });
 });

@@ -53,7 +53,9 @@ npm install
 Pennywise offers multiple sharing options without any server accounts or tracking:
 - **Instant Social & Messaging**: Quick links to share summaries via WhatsApp, Telegram, SMS, or Email.
 - **Native Web Share**: Share formatted text directly into native mobile share sheets (`navigator.share`).
-- **Receipt Image Card (PNG)**: Generate a high-resolution 1080×1350 card designed for mobile stories and chat apps using pure client-side HTML5 Canvas. Includes themed styling for both dark and light modes, mascot artwork, and up to 8 settlement rows with overflow indication.
+- **Receipt Image Card (PNG)**: Generate a high-resolution 1080×1350 card designed for mobile stories and chat apps using pure client-side HTML5 Canvas. Includes themed styling for both dark and light modes, mascot artwork, up to 8 settlement rows with overflow indication, and a receipts breakdown section.
+- **Shareable Link (No Backend)**: Encodes participants, expenses, and currency into the URL hash with compression (`CompressionStream('deflate-raw')`) and base64url encoding (`#d=1.<payload>`). Safe to open from untrusted sources with strict validation, read-only preview mode, and confirmation before importing.
+- **Download CSV**: Generates RFC 4180 compliant CSV files with UTF-8 BOM for Microsoft Excel containing separate Expenses and Settlements sections.
 - **Copy Text**: Quick one-click formatted breakdown for easy pasting.
 
 ### Running Locally (Development)

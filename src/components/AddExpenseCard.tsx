@@ -2,15 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useExpenseStore } from '../hooks/useExpenseStore';
 import { parseAmountToMinor } from '../lib/money';
 import { SUPPORTED_CURRENCIES } from '../lib/constants';
+import { MAX_EXPENSES, MAX_DESC_LENGTH } from '../lib/expenseReducer';
 import { CardTopBlood } from './decor/CardTopBlood';
 
 export const AddExpenseCard: React.FC = () => {
-  const { people, currency, setCurrency, addExpense } = useExpenseStore();
+  const { people, expenses, currency, setCurrency, addExpense } = useExpenseStore();
 
   const [payerId, setPayerId] = useState<string>('');
   const [description, setDescription] = useState('');
   const [amountInput, setAmountInput] = useState('');
   const [amountError, setAmountError] = useState<string | null>(null);
+  const [expenseLimitError, setExpenseLimitError] = useState<string | null>(null);
   const [selectedParticipants, setSelectedParticipants] = useState<string[]>([]);
   const [hasManuallyModifiedParticipants, setHasManuallyModifiedParticipants] = useState(false);
   const [showAddBalloon, setShowAddBalloon] = useState(false);
@@ -110,13 +112,30 @@ export const AddExpenseCard: React.FC = () => {
       return;
     }
 
+    if (expenses.length >= MAX_EXPENSES) {
+      setExpenseLimitError("That's the limit for one trip: 500 expenses.");
+      return;
+    }
+
+    if (trimmedDesc.length > MAX_DESC_LENGTH) {
+      setExpenseLimitError("Description cannot exceed 120 characters.");
+      return;
+    }
+
     // Add expense
-    addExpense({
+    const newId = addExpense({
       description: trimmedDesc,
       amountMinor: minor,
       paidBy: payerId,
       participants: selectedParticipants,
     });
+
+    if (!newId) {
+      if (expenses.length >= MAX_EXPENSES) {
+        setExpenseLimitError("That's the limit for one trip: 500 expenses.");
+      }
+      return;
+    }
 
     // Trigger ephemeral rising balloon animation from button
     setShowAddBalloon(true);
@@ -126,6 +145,7 @@ export const AddExpenseCard: React.FC = () => {
     setDescription('');
     setAmountInput('');
     setAmountError(null);
+    setExpenseLimitError(null);
 
     // Refocus description input
     descInputRef.current?.focus();
@@ -155,12 +175,12 @@ export const AddExpenseCard: React.FC = () => {
           id="add-expense-title"
           className="font-display text-2xl text-text-base tracking-wide mb-3"
         >
-          Add to the Tab
+          Add an Expense
         </h2>
 
       {people.length < 2 ? (
         <div className="py-4 px-4 rounded-xl border border-dashed border-border/80 bg-background/50 text-center text-sm text-text-muted">
-          <p>Need at least 2 people down here to split a tab.</p>
+          <p>Need at least 2 people down here to split expenses.</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -213,8 +233,12 @@ export const AddExpenseCard: React.FC = () => {
                 id="expense-description-input"
                 ref={descInputRef}
                 type="text"
+                maxLength={MAX_DESC_LENGTH}
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                  if (expenseLimitError) setExpenseLimitError(null);
+                }}
                 placeholder="e.g. Carnival tickets, cotton candy"
                 className="w-full min-h-[44px] px-3.5 py-2 rounded-xl bg-background border border-border text-text-base placeholder:text-text-muted text-sm transition-colors focus:outline-none focus:border-accent-text focus-visible:ring-2 focus-visible:ring-accent-text"
               />
@@ -375,12 +399,18 @@ export const AddExpenseCard: React.FC = () => {
               </div>
             )}
 
+            {expenseLimitError && (
+              <p role="alert" className="text-xs text-negative-text font-medium flex items-center gap-1">
+                <span>⚠️</span> {expenseLimitError}
+              </p>
+            )}
+
             <button
               type="submit"
               disabled={!isFormValid}
               className="group relative w-full min-h-[44px] py-2.5 px-4 rounded-xl font-semibold text-sm transition-colors shadow-sm focus-visible:ring-2 focus-visible:ring-accent-text bg-accent text-white hover:bg-accent-hover disabled:bg-surface disabled:text-text-muted disabled:border disabled:border-border disabled:opacity-90 disabled:cursor-not-allowed overflow-visible"
             >
-              <span>Add to the tab</span>
+              <span>Add expense</span>
 
               {/* Hover blood drip along bottom edge */}
               <svg

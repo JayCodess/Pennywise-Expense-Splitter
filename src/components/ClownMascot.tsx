@@ -17,8 +17,10 @@ export const ClownMascot: React.FC<ClownMascotProps> = ({
   // Desktop-only pupil follow cursor (pointer: fine, throttled)
   useEffect(() => {
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
-    const isFinePointer = window.matchMedia('(pointer: fine)').matches;
-    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fineMql = window.matchMedia('(pointer: fine)');
+    const motionMql = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const isFinePointer = fineMql ? fineMql.matches : false;
+    const isReducedMotion = motionMql ? motionMql.matches : false;
     if (!isFinePointer || isReducedMotion) return;
 
     let rafId: number;
