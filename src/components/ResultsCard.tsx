@@ -5,6 +5,7 @@ import { StormDrain } from './StormDrain';
 import { CardTopBlood } from './decor/CardTopBlood';
 import { CardBalloon } from './decor/CardBalloon';
 import { ShareMenu } from './ShareMenu';
+import { ImageCardPreviewModal } from './ImageCardPreviewModal';
 
 export const ResultsCard: React.FC = () => {
   const {
@@ -17,6 +18,7 @@ export const ResultsCard: React.FC = () => {
   } = useExpenseStore();
 
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const shareButtonRef = useRef<HTMLButtonElement>(null);
@@ -114,6 +116,14 @@ export const ResultsCard: React.FC = () => {
             buttonRef={shareButtonRef}
             isOpen={isShareMenuOpen}
             onClose={() => setIsShareMenuOpen(false)}
+            onOpenImageCard={() => setIsImageModalOpen(true)}
+          />
+
+          {/* Image Card Preview Modal */}
+          <ImageCardPreviewModal
+            isOpen={isImageModalOpen}
+            onClose={() => setIsImageModalOpen(false)}
+            triggerButtonRef={shareButtonRef}
           />
         </div>
       </div>

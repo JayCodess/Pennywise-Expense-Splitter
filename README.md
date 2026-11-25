@@ -48,6 +48,14 @@ A creepy-carnival expense splitter web app where a group enters who paid for wha
 npm install
 ```
 
+### Sharing
+
+Pennywise offers multiple sharing options without any server accounts or tracking:
+- **Instant Social & Messaging**: Quick links to share summaries via WhatsApp, Telegram, SMS, or Email.
+- **Native Web Share**: Share formatted text directly into native mobile share sheets (`navigator.share`).
+- **Receipt Image Card (PNG)**: Generate a high-resolution 1080×1350 card designed for mobile stories and chat apps using pure client-side HTML5 Canvas. Includes themed styling for both dark and light modes, mascot artwork, and up to 8 settlement rows with overflow indication.
+- **Copy Text**: Quick one-click formatted breakdown for easy pasting.
+
 ### Running Locally (Development)
 ```bash
 npm run dev
