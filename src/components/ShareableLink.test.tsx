@@ -203,7 +203,7 @@ describe('Shareable Link & Safe Hash Import Tests', () => {
 
     // Verify localStorage now holds Dracula
     const stored = JSON.parse(localStorage.getItem('pennywise_data_v1') || '{}');
-    expect(stored.people.some((p: any) => p.name === 'Dracula')).toBe(true);
+    expect(stored.people.some((p: { name: string }) => p.name === 'Dracula')).toBe(true);
 
     // Hash is cleared
     expect(replaceStateSpy).toHaveBeenCalled();

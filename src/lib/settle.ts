@@ -1,3 +1,7 @@
+/**
+ * Optimal minimum cash flow settlement calculation with fair rounding rotation.
+ */
+
 import { Person, Expense, Settlement, PersonBalance } from './types';
 
 /**

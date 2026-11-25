@@ -1,3 +1,7 @@
+/**
+ * RFC 4180 compliant CSV export generator with UTF-8 BOM and formula injection protection.
+ */
+
 import { Person, Expense, Settlement } from './types';
 
 export interface GenerateCSVOptions {

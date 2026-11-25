@@ -1,3 +1,7 @@
+/**
+ * Pure state reducer and hydration validator for expense splitter state.
+ */
+
 import { Person, Expense } from './types';
 import { SUPPORTED_CURRENCIES, DEFAULT_CURRENCY, EXAMPLE_PEOPLE, EXAMPLE_EXPENSES } from './constants';
 

@@ -1,3 +1,7 @@
+/**
+ * Domain types for people, expenses, settlements, and net balances.
+ */
+
 export interface Person {
   id: string;
   name: string;

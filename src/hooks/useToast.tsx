@@ -1,3 +1,7 @@
+/**
+ * Floating ephemeral toast provider and hook for user feedback notifications.
+ */
+
 import React, { createContext, useContext, useState, useRef, useCallback } from 'react';
 
 export interface ToastMessage {

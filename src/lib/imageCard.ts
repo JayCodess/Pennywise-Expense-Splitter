@@ -1,3 +1,7 @@
+/**
+ * Client-side HTML5 Canvas receipt card renderer for social sharing.
+ */
+
 import { Person, Settlement, Expense } from './types';
 import { formatMoney } from './money';
 

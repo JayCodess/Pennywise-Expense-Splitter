@@ -54,7 +54,7 @@ describe('imageCard - renderReceiptCardBlob', () => {
       drawImage: vi.fn(),
       fillText: vi.fn(),
       measureText: vi.fn().mockReturnValue({ width: 100 }),
-    }) as any;
+    }) as unknown as CanvasRenderingContext2D;
 
     HTMLCanvasElement.prototype.toBlob = vi.fn().mockImplementation((callback) => {
       callback(new Blob(['fake-png-data'], { type: 'image/png' }));

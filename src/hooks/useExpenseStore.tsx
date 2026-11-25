@@ -1,3 +1,7 @@
+/**
+ * React Context provider and store hook for application state, persistence, and derived settlements.
+ */
+
 import React, { createContext, useContext, useReducer, useEffect, useMemo, useCallback, useState } from 'react';
 import { Person, Expense, Settlement, PersonBalance } from '../lib/types';
 import {

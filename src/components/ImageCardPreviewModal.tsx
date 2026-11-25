@@ -74,7 +74,7 @@ export const ImageCardPreviewModal: React.FC<ImageCardPreviewModalProps> = ({
         } else {
           setCanShareFiles(false);
         }
-      } catch (err) {
+      } catch {
         if (!isMounted) return;
         showToast('Could not generate receipt image', '⚠️');
         onClose();
@@ -92,6 +92,7 @@ export const ImageCardPreviewModal: React.FC<ImageCardPreviewModalProps> = ({
         URL.revokeObjectURL(blobUrl);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, people, settlements, totalSpentMinor, currency, theme]);
 
   // Lock body scroll and handle keyboard accessibility (Escape, focus trap)

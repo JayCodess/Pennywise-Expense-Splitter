@@ -1,3 +1,7 @@
+/**
+ * Application-wide constants, currency definitions, and example data.
+ */
+
 export const SUPPORTED_CURRENCIES = [
   'USD',
   'EUR',

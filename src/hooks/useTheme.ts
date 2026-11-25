@@ -1,3 +1,7 @@
+/**
+ * Theme hook managing dark/light modes, OS preference, and localStorage persistence.
+ */
+
 import { useState, useEffect, useCallback } from 'react';
 
 export type Theme = 'dark' | 'light';

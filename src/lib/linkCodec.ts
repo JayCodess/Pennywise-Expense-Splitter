@@ -1,3 +1,7 @@
+/**
+ * Compressed URL hash codec (#d=1.<payload>) using deflate-raw and base64url.
+ */
+
 import { Person, Expense } from './types';
 import { validateHydratedState } from './expenseReducer';
 

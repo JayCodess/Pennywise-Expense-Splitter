@@ -1,4 +1,8 @@
 /**
+ * Money utilities: parsing user input into minor units (cents/paise) and formatting.
+ */
+
+/**
  * Parses user input string into integer minor units (e.g. cents/paise).
  * Handles thousands separators and decimal points across standard locales:
  * - "1,234.50" -> 123450
@@ -120,6 +124,10 @@ export function parseAmountToMinor(input: string): number | null {
 
   return minor;
 }
+
+/**
+ * Money utilities: parsing user input into minor units (cents/paise) and formatting.
+ */
 
 /**
  * Formats minor units (cents/paise) into localized currency string using Intl.NumberFormat.

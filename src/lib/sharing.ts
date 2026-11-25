@@ -1,3 +1,7 @@
+/**
+ * Text summary builders and social sharing deep link URL generators.
+ */
+
 import { Person, Settlement } from './types';
 import { formatMoney } from './money';
 

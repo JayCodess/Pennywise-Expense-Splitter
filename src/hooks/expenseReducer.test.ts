@@ -117,7 +117,7 @@ describe('expenseReducer and Store State', () => {
     };
 
     // Valid add
-    let state = expenseReducer(baseState, {
+    const state = expenseReducer(baseState, {
       type: 'ADD_EXPENSE',
       payload: {
         id: 'e1',
