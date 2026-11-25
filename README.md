@@ -81,3 +81,6 @@ Locally preview the built production app:
 ```bash
 npm run preview
 ```
+
+### Deploying to a Custom Domain
+The production URL for canonical and Open Graph (`og:image`, `og:url`, `twitter:image`) metadata is defined in one place in `vite.config.ts` (`DEFAULT_SITE_URL`). To deploy to a custom domain, either update `DEFAULT_SITE_URL` in `vite.config.ts` or set the `VITE_SITE_URL` environment variable before running `npm run build`.
