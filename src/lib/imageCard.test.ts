@@ -36,7 +36,6 @@ describe('imageCard - renderReceiptCardBlob', () => {
     const originalGetContext = HTMLCanvasElement.prototype.getContext;
     const originalToBlob = HTMLCanvasElement.prototype.toBlob;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue({
       createRadialGradient: () => ({
         addColorStop: vi.fn(),

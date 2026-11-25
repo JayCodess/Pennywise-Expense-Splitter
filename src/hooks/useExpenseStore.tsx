@@ -27,7 +27,7 @@ import { ShareablePayload } from '../lib/linkCodec';
 
 const STORAGE_KEY = 'pennywise_data_v1';
 
-export function generateId(): string {
+function generateId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
   }
