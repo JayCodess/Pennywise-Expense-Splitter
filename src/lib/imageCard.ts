@@ -359,7 +359,9 @@ export async function renderReceiptCardBlob(options: ImageCardOptions): Promise<
     currency,
     theme,
     date = new Date().toISOString().split('T')[0],
-    origin = typeof window !== 'undefined' ? window.location.origin : 'https://pennywise.app',
+    origin = typeof window !== 'undefined'
+      ? window.location.origin
+      : 'https://j-pennywise.vercel.app',
   } = options;
 
   await ensureFontsLoaded();

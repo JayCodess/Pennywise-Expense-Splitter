@@ -4,7 +4,6 @@ import { Expense } from '../lib/types';
 import { formatMoney, parseAmountToMinor } from '../lib/money';
 import { MAX_DESC_LENGTH } from '../lib/expenseReducer';
 import { StormDrain } from './StormDrain';
-import { CardTopBlood } from './decor/CardTopBlood';
 
 export const ExpensesCard: React.FC = () => {
   const { people, expenses, currency, totalSpentMinor, updateExpense, deleteExpense } =
@@ -130,15 +129,8 @@ export const ExpensesCard: React.FC = () => {
   return (
     <section
       aria-labelledby="expenses-section-title"
-      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 pt-8 sm:pt-9 shadow-carnival animate-card-in overflow-hidden"
+      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 shadow-carnival animate-card-in overflow-hidden"
     >
-      <div
-        data-testid="card-blood-layer"
-        className="absolute top-0 left-0 right-0 h-[18px] overflow-hidden pointer-events-none z-0"
-      >
-        <CardTopBlood seed={103} />
-      </div>
-
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
           <h2

@@ -3,7 +3,6 @@ import { useExpenseStore } from '../hooks/useExpenseStore';
 import { parseAmountToMinor } from '../lib/money';
 import { SUPPORTED_CURRENCIES } from '../lib/constants';
 import { MAX_EXPENSES, MAX_DESC_LENGTH } from '../lib/expenseReducer';
-import { CardTopBlood } from './decor/CardTopBlood';
 
 export const AddExpenseCard: React.FC = () => {
   const { people, expenses, currency, setCurrency, addExpense } = useExpenseStore();
@@ -161,15 +160,8 @@ export const AddExpenseCard: React.FC = () => {
   return (
     <section
       aria-labelledby="add-expense-title"
-      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 pt-8 sm:pt-9 shadow-carnival animate-card-in overflow-hidden"
+      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 shadow-carnival animate-card-in overflow-hidden"
     >
-      <div
-        data-testid="card-blood-layer"
-        className="absolute top-0 left-0 right-0 h-[18px] overflow-hidden pointer-events-none z-0"
-      >
-        <CardTopBlood seed={102} />
-      </div>
-
       <div className="relative z-10">
         <h2
           id="add-expense-title"

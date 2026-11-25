@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useExpenseStore } from '../hooks/useExpenseStore';
 import { MAX_PEOPLE, MAX_NAME_LENGTH } from '../lib/expenseReducer';
 import { StormDrain } from './StormDrain';
-import { CardTopBlood } from './decor/CardTopBlood';
 
 export const PeopleCard: React.FC = () => {
   const { people, expenses, addPerson, removePerson, loadExample } = useExpenseStore();
@@ -100,16 +99,8 @@ export const PeopleCard: React.FC = () => {
   return (
     <section
       aria-labelledby="people-section-title"
-      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 pt-8 sm:pt-9 shadow-carnival animate-card-in overflow-hidden"
+      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 shadow-carnival animate-card-in overflow-hidden"
     >
-      {/* Exactly ONE blood layer per card, anchored at top: 0, left: 0, right: 0 with 18px height clip */}
-      <div
-        data-testid="card-blood-layer"
-        className="absolute top-0 left-0 right-0 h-[18px] overflow-hidden pointer-events-none z-0"
-      >
-        <CardTopBlood seed={101} />
-      </div>
-
       <div className="relative z-10">
         <h2
           id="people-section-title"

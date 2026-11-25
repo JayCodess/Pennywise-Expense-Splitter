@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useExpenseStore } from '../hooks/useExpenseStore';
 import { formatMoney } from '../lib/money';
 import { StormDrain } from './StormDrain';
-import { CardTopBlood } from './decor/CardTopBlood';
-import { CardBalloon } from './decor/CardBalloon';
 import { ShareMenu } from './ShareMenu';
 import { ImageCardPreviewModal } from './ImageCardPreviewModal';
 
@@ -52,18 +50,8 @@ export const ResultsCard: React.FC = () => {
     <section
       id="results-card"
       aria-labelledby="results-title"
-      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 pt-8 sm:pt-9 shadow-carnival animate-card-in overflow-hidden"
+      className="relative bg-surface border border-border rounded-card p-4 sm:p-5 shadow-carnival animate-card-in overflow-hidden"
     >
-      <div
-        data-testid="card-blood-layer"
-        className="absolute top-0 left-0 right-0 h-[18px] overflow-hidden pointer-events-none z-0"
-      >
-        <CardTopBlood seed={104} />
-      </div>
-
-      {/* Decorative balloon positioned strictly outside the card content on top right */}
-      <CardBalloon className="-top-3 -right-2" />
-
       <div className="relative z-10 space-y-4">
         <div className="flex items-center justify-between border-b border-border pb-3">
           <div>

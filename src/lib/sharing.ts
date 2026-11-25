@@ -11,7 +11,7 @@ export interface TextSummaryOptions {
   totalSpentMinor: number;
   currency: string;
   date?: string; // Optional override for deterministic tests, e.g. "2026-11-25"
-  origin?: string; // App URL, e.g. "https://pennywise.app"
+  origin?: string; // App URL, e.g. "https://j-pennywise.vercel.app"
   maxSettlements?: number; // default 15
 }
 
@@ -95,7 +95,7 @@ export function isIOS(): boolean {
 export function buildSocialShareUrls(summaryText: string, origin?: string) {
   const encodedText = encodeURIComponent(summaryText);
   const appOrigin = origin || (typeof window !== 'undefined' ? window.location.origin : '');
-  const encodedOrigin = encodeURIComponent(appOrigin || 'https://pennywise.app');
+  const encodedOrigin = encodeURIComponent(appOrigin || 'https://j-pennywise.vercel.app');
 
   // WhatsApp
   const whatsappUrl = `https://wa.me/?text=${encodedText}`;
