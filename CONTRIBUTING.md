@@ -21,8 +21,8 @@ Thank you for your interest in improving Pennywise! We welcome contributions tha
 
 ```bash
 # Clone the repository
-git clone https://github.com/REPLACE_WITH_YOUR_USERNAME/pennywise.git
-cd pennywise
+git clone https://github.com/JayCodess/Pennywise-Expense-Splitter.git
+cd Pennywise-Expense-Splitter
 
 # Install dependencies
 npm install

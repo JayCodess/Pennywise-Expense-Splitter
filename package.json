@@ -8,10 +8,10 @@
   "homepage": "https://j-pennywise.vercel.app",
   "repository": {
     "type": "git",
-    "url": "https://github.com/REPLACE_WITH_YOUR_USERNAME/pennywise.git"
+    "url": "https://github.com/JayCodess/Pennywise-Expense-Splitter.git"
   },
   "bugs": {
-    "url": "https://github.com/REPLACE_WITH_YOUR_USERNAME/pennywise/issues"
+    "url": "https://github.com/JayCodess/Pennywise-Expense-Splitter/issues"
   },
   "keywords": [
     "expense-splitter",

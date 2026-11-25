@@ -1,6 +1,6 @@
 # Pennywise
 
-[![CI](https://github.com/REPLACE_WITH_YOUR_USERNAME/pennywise/actions/workflows/ci.yml/badge.svg)](https://github.com/REPLACE_WITH_YOUR_USERNAME/pennywise/actions/workflows/ci.yml)
+[![CI](https://github.com/JayCodess/Pennywise-Expense-Splitter/actions/workflows/ci.yml/badge.svg)](https://github.com/JayCodess/Pennywise-Expense-Splitter/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-18.3.1-61dafb.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7.2-3178c6.svg)](https://www.typescriptlang.org/)
@@ -76,8 +76,8 @@ A client-only expense splitter with a playful carnival aesthetic that calculates
 
 ```bash
 # Clone the repository
-git clone https://github.com/REPLACE_WITH_YOUR_USERNAME/pennywise.git
-cd pennywise
+git clone https://github.com/JayCodess/Pennywise-Expense-Splitter.git
+cd Pennywise-Expense-Splitter
 
 # Install project dependencies
 npm install
