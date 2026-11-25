@@ -273,7 +273,7 @@ export const ResultsCard: React.FC = () => {
                     setShowClearConfirm(false);
                     banishTriggerBtnRef.current?.focus();
                   }}
-                  className="px-2.5 py-1.5 rounded-lg border border-border bg-surface text-text-base hover:border-accent-text text-xs font-medium focus-visible:ring-2 focus-visible:ring-accent-text"
+                  className="min-h-[44px] px-3 py-1.5 rounded-lg border border-border bg-surface text-text-base hover:border-accent-text text-xs font-medium focus-visible:ring-2 focus-visible:ring-accent-text"
                 >
                   Cancel
                 </button>
@@ -283,7 +283,7 @@ export const ResultsCard: React.FC = () => {
                     clearAll();
                     setShowClearConfirm(false);
                   }}
-                  className="px-2.5 py-1.5 rounded-lg bg-negative text-white hover:bg-accent-hover text-xs font-semibold focus-visible:ring-2 focus-visible:ring-accent-text"
+                  className="min-h-[44px] px-3 py-1.5 rounded-lg bg-negative text-white hover:bg-accent-hover text-xs font-semibold focus-visible:ring-2 focus-visible:ring-accent-text"
                 >
                   Yes, banish
                 </button>
@@ -294,7 +294,7 @@ export const ResultsCard: React.FC = () => {
               ref={banishTriggerBtnRef}
               type="button"
               onClick={() => setShowClearConfirm(true)}
-              className="text-xs text-text-muted hover:text-negative-text hover:bg-negative/10 hover:border hover:border-negative-text/40 transition-colors py-1.5 px-2.5 rounded-lg border border-transparent focus-visible:ring-2 focus-visible:ring-accent-text min-h-[36px]"
+              className="text-xs text-text-muted hover:text-negative-text hover:bg-negative/10 hover:border hover:border-negative-text/40 transition-colors py-2 px-3 rounded-lg border border-transparent focus-visible:ring-2 focus-visible:ring-accent-text min-h-[44px]"
             >
               Banish everything
             </button>

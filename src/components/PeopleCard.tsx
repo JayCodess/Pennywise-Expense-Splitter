@@ -195,14 +195,14 @@ export const PeopleCard: React.FC = () => {
               ref={cancelBtnRef}
               type="button"
               onClick={() => setPersonToRemove(null)}
-              className="min-h-[36px] px-3 py-1.5 rounded-lg border border-border bg-surface text-text-base font-medium hover:border-accent-text transition-colors"
+              className="min-h-[44px] px-3 py-1.5 rounded-lg border border-border bg-surface text-text-base font-medium hover:border-accent-text transition-colors"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleConfirmRemove}
-              className="min-h-[36px] px-3 py-1.5 rounded-lg bg-negative text-white font-medium hover:bg-accent-hover transition-colors"
+              className="min-h-[44px] px-3 py-1.5 rounded-lg bg-negative text-white font-medium hover:bg-accent-hover transition-colors"
             >
               Banish {personToRemove.name}
             </button>
@@ -245,7 +245,7 @@ export const PeopleCard: React.FC = () => {
                 onClick={() => handleInitiateRemove(person.id, person.name)}
                 aria-label={`Remove ${person.name}`}
                 title={`Remove ${person.name}`}
-                className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted hover:text-negative-text hover:bg-surface transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
+                className="min-w-[44px] min-h-[44px] -mr-1.5 rounded-full flex items-center justify-center text-text-muted hover:text-negative-text hover:bg-surface transition-colors focus-visible:ring-2 focus-visible:ring-accent-text"
               >
                 <span className="text-base leading-none" aria-hidden="true">
                   ×

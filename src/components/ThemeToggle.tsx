@@ -13,7 +13,7 @@ export const ThemeToggle: React.FC = () => {
       onClick={toggleTheme}
       aria-label={label}
       title={label}
-      className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-border bg-surface text-text-muted hover:text-text-base hover:border-accent-text transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-accent-text"
+      className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] w-11 h-11 rounded-full border border-border bg-surface text-text-muted hover:text-text-base hover:border-accent-text transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-accent-text"
     >
       {isDark ? (
         /* Sun icon for switching to light theme */
