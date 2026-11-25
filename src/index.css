@@ -97,8 +97,10 @@ select option {
   *,
   ::before,
   ::after {
+    animation: none !important;
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
+    transition: none !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
